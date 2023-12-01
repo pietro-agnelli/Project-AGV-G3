@@ -1,5 +1,7 @@
 # Measuring protocol
 
+![Setup](./20231201_120150.jpg)
+
 ## Setup
 
 The calibration setup consists of:
