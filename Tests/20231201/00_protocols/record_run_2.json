@@ -1,0 +1,27 @@
+{
+    "settings": {
+        "FPS": 12,
+        "aruco_size": 100
+      },
+    "parallel": [
+      {"actual_time": "11:58", "jetson_time": "11:12"},
+      {"actual_time": "12:00", "jetson_time": "11:14"}
+    ],
+    "perpendicular": [
+      {"actual_time": "11:54", "jetson_time": "11:08"},
+      {"actual_time": "11:55", "jetson_time": "11:09"}
+    ],
+    "30_degrees": [
+      {"actual_time": "11:49", "jetson_time": "11:03"},
+      {"actual_time": "11:52", "jetson_time": "11:05"}
+    ],
+    "40_degrees": [
+      {"actual_time": "11:46", "jetson_time": "11:00"},
+      {"actual_time": "11:48", "jetson_time": "11:01"}
+    ],
+    "60_degrees": [
+      {"actual_time": "11:43", "jetson_time": "10:56"},
+      {"actual_time": "11:44", "jetson_time": "10:58"}
+    ]
+  }
+  
