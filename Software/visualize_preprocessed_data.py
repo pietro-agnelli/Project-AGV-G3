@@ -29,5 +29,5 @@ for test in glob.glob(os.path.join(PREPROCESSED_DIR, '*___ARUCO_2023_12_01_*.csv
     ax6.set_ylabel(r"yaw")
 
     fig.align_labels()
-    plt.suptitle(str(os.path.split(test)[-1]), x=0.5, y=1.05, fontsize=20)
+    plt.suptitle(str(os.path.split(test)[-1]), fontsize=16)
     plt.show()
