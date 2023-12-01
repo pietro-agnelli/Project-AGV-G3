@@ -1,0 +1,18 @@
+Sono state eseguite due prove in ciascuna direzione, per ogni direzione abbiamo eseguito
+andata e ritorno, cercando di mantenere la velocità di traslazione costante.
+Cattura: 12FPS circa, dimensione aruco 100
+- spostamento parallelo all'aruco:
+-- 11:58 (11:12)
+-- 12:00 (11:14)
+- spostamento ortogonale all'aruco:
+-- 11:54 (11:08)
+-- 11:55 (11:09)
+- spostamento sfasato di 30°:
+-- 11:49 (11:03)
+-- 11:52 (11:05)
+- spostamento sfasato di 45°:
+-- 11:46 (11:00)
+-- 11:48 (11:01)
+- spostamento sfasato di 60°:
+-- 11:43 (10:56)
+-- 11:44 (10:58)
