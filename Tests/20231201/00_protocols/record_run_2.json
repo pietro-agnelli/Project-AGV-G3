@@ -15,7 +15,7 @@
       {"actual_time": "11:49", "jetson_time": "11:03"},
       {"actual_time": "11:52", "jetson_time": "11:05"}
     ],
-    "40_degrees": [
+    "45_degrees": [
       {"actual_time": "11:46", "jetson_time": "11:00"},
       {"actual_time": "11:48", "jetson_time": "11:01"}
     ],
