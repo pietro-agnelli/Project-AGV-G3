@@ -28,7 +28,7 @@ theta_45_dataset = [DATASET_THETA_45_1;DATASET_THETA_45_2];
 % Translation 60 deg from z axis
 DATASET_THETA_60_1 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_10_55_40.csv");
 DATASET_THETA_60_2 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_10_57_50.csv");
-theta_60_dataset = [DATASET_THETA_60_1;DATASET_THETA_60_2];
+theta_60_dataset =DATASET_THETA_60_1;% [DATASET_THETA_60_1;DATASET_THETA_60_2];
 
 %% LINEAR REGRESSION
 
@@ -40,7 +40,7 @@ figure("Name", "XZ")
 [zx_model, gof_zx, out_zx] = fit(zx_dataset.x,zx_dataset.z,'Poly1',opt);
 plot(zx_model,'r')
 hold on
-plot(zx_dataset.x,zx_dataset.z,'ob',MarkerSize=4,DisplayName='Data points')
+plot(zx_dataset.x,zx_dataset.z,'*b',MarkerSize=4,DisplayName='Data points')
 axis equal
 xlabel("x")
 ylabel("z")
@@ -51,62 +51,63 @@ figure("Name","ZX")
 [xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
 plot(xz_model,'r')
 hold on
-plot(xz_dataset.z,xz_dataset.x,'ob',MarkerSize=4,DisplayName='Data points')
+plot(xz_dataset.z,xz_dataset.x,'*b',MarkerSize=4,DisplayName='Data points')
 axis equal
 xlabel("z")
 ylabel("x")
 %%
-% Plot yaw as a function of z (moving along z axis)
-figure("Name","THETA 0")
-[theta_0_model, gof_0, out_0] = fit(xz_dataset.z, xz_dataset.yaw,'Poly1',opt);figure("Name","theta_0")
+% Plot pitch as a function of z (moving along z axis) for different theta
+figure("Name","THETA_0")
+[theta_0_model, gof_0, out_0] = fit(xz_dataset.z, abs(xz_dataset.pitch),'Poly1',opt);
 plot(theta_0_model,'r')
 hold on
-plot(xz_dataset.z,xz_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-axis equal
+plot(xz_dataset.z,abs(xz_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+%axis equal
 xlabel("z")
-ylabel("x")
+ylabel("pitch")
 %% 
 figure("Name","THETA_30")
-[theta_30_model, gof_30, out_30] = fit(theta_30_dataset.z,theta_30_dataset.yaw,'Poly1',opt);
+[theta_30_model, gof_30, out_30] = fit(sqrt(theta_30_dataset.z.^2+theta_30_dataset.x.^2),abs(theta_30_dataset.pitch),'Poly1',opt);
 plot(theta_30_model,'r')
 hold on
-plot(theta_30_dataset.z,theta_30_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-axis equal
+plot(sqrt(theta_30_dataset.z.^2+theta_30_dataset.x.^2),abs(theta_30_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+%axis equal
 xlabel("z")
-ylabel("yaw")
+ylabel("pitch")
 %% 
 figure("Name","THETA_45")
-[theta_45_model, gof_45, out_45] = fit(theta_45_dataset.z,theta_45_dataset.yaw,'Poly1',opt);
+[theta_45_model, gof_45, out_45] = fit(sqrt(theta_45_dataset.z.^2+theta_45_dataset.x.^2),abs(theta_45_dataset.pitch),'Poly1',opt);
 plot(theta_45_model,'r')
 hold on
-plot(theta_45_dataset.z,theta_45_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-axis equal
+plot(sqrt(theta_45_dataset.z.^2+theta_45_dataset.x.^2),abs(theta_45_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+%axis equal
 xlabel("z")
-ylabel("yaw")
+ylabel("pitch")
 %% 
 figure("Name","THETA_60")
-[theta_60_model, gof_60, out_60] = fit(theta_60_dataset.z,theta_60_dataset.yaw,'Poly1',opt);
+[theta_60_model, gof_60, out_60] = fit(sqrt(theta_60_dataset.z.^2+theta_60_dataset.x.^2),abs(theta_60_dataset.pitch),'Poly1',opt);
 plot(theta_60_model,'r')
 hold on
-plot(theta_60_dataset.z,theta_60_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-axis equal
+plot(sqrt(theta_60_dataset.z.^2+theta_60_dataset.x.^2),abs(theta_60_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+%axis equal
 xlabel("z")
-ylabel("yaw")
+ylabel("pitch")
 
 %% UNCERTAINTY ASESSMENT
 
-sigma_zx = sqrt(gof_zx.sse/(height(zx_dataset)-2))
-sigma_xz = sqrt(gof_xz.sse/(height(xz_dataset)-2))
-sigma_theta_0 = sqrt(gof_0.sse/(height(xz_dataset)-2))
-sigma_theta_30 = sqrt(gof_30.sse/(height(theta_30_dataset)-2))
-sigma_theta_45 = sqrt(gof_45.sse/(height(theta_45_dataset)-2))
-sigma_theta_60 = sqrt(gof_60.sse/(height(theta_60_dataset)-2))
+sigma_zx = sqrt(gof_zx.sse/(height(zx_dataset)-out_zx.numparam))
+sigma_xz = sqrt(gof_xz.sse/(height(xz_dataset)-out_xz.numparam))
+sigma_theta_0 = sqrt(gof_0.sse/(height(xz_dataset)-out_0.numparam))
+sigma_theta_30 = sqrt(gof_30.sse/(height(theta_30_dataset)-out_30.numparam))
+sigma_theta_45 = sqrt(gof_45.sse/(height(theta_45_dataset)-out_45.numparam))
+sigma_theta_60 = sqrt(gof_60.sse/(height(theta_60_dataset)-out_60.numparam))
 
 %% UNCERTAINTY MATRIX
 % Use the greatest uncertainty among theta
 U = diag([sigma_zx sigma_xz sigma_theta_0])
 
 %% Uncertainty variation over theta
+figure("Name","Theta variance")
 theta = [0 30 45 60];
 plot(theta,[sigma_theta_0 sigma_theta_30 sigma_theta_45 sigma_theta_60])
 
