@@ -49,11 +49,18 @@ ylabel("z")
 % Plotto z in funzione di x (movimento ortogonale al marker)
 figure("Name","ZX")
 [xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
-[theta_0_model, gof_0, out_0] = fit(xz_dataset.yaw, xz_dataset.z,'Poly1',opt);
+[theta_0_model, gof_0, out_0] = fit(xz_dataset.z, xz_dataset.yaw,'Poly1',opt);
 plot(xz_model,'r')
 hold on
 plot(xz_dataset.z,xz_dataset.x,'ob',MarkerSize=4,DisplayName='Data points')
 axis equal
+xlabel("z")
+ylabel("x")
+figure("Name","theta_0")
+plot(theta_0_model,'r')
+hold on
+plot(xz_dataset.z,xz_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
+%axis equal
 xlabel("z")
 ylabel("x")
 %% 
@@ -79,8 +86,6 @@ plot(theta_45_dataset.z,theta_45_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data
 xlabel("z")
 ylabel("yaw")
 %% 
-
-
 figure("Name","THETA_60")
 [theta_60_model, gof_60, out_60] = fit(theta_60_dataset.z,theta_60_dataset.yaw,'Poly1',opt);
 plot(theta_60_model,'r')
@@ -90,6 +95,7 @@ plot(theta_60_dataset.z,theta_60_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data
 xlabel("z")
 ylabel("yaw")
 %%
+figure
 plot(theta_0_model)
 hold on
 plot(theta_30_model)
@@ -98,3 +104,11 @@ plot(theta_45_model)
 hold on
 plot(theta_60_model)
 
+%% UNCERTAINTY ASESSMENT
+
+sigma_zx = sqrt(gof_zx.sse/(height(zx_dataset)-2))
+sigma_xz = sqrt(gof_xz.sse/(height(xz_dataset)-2))
+sigma_theta_0 = sqrt(gof_0.sse/(height(xz_dataset)-2))
+sigma_theta_30 = sqrt(gof_30.sse/(height(theta_30_dataset)-2))
+sigma_theta_45 = sqrt(gof_45.sse/(height(theta_45_dataset)-2))
+sigma_theta_60 = sqrt(gof_60.sse/(height(theta_60_dataset)-2))
