@@ -35,7 +35,7 @@ theta_60_dataset = [DATASET_THETA_60_1;DATASET_THETA_60_2];
 % Setting common options for all regressions
 opt = fitoptions('Method', 'LinearLeastSquares');
 
-% Plotto x in funzione di z (movimento parallelo al marker)
+% Plot z as a function of x (translation along x axis)
 figure("Name", "XZ")
 [zx_model, gof_zx, out_zx] = fit(zx_dataset.x,zx_dataset.z,'Poly1',opt);
 plot(zx_model,'r')
@@ -46,43 +46,41 @@ xlabel("x")
 ylabel("z")
 %% 
 
-% Plotto z in funzione di x (movimento ortogonale al marker)
+% Plot x as a function of z (translation along z axis)
 figure("Name","ZX")
 [xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
-[theta_0_model, gof_0, out_0] = fit(xz_dataset.z, xz_dataset.yaw,'Poly1',opt);
 plot(xz_model,'r')
 hold on
 plot(xz_dataset.z,xz_dataset.x,'ob',MarkerSize=4,DisplayName='Data points')
 axis equal
 xlabel("z")
 ylabel("x")
-figure("Name","theta_0")
+%%
+% Plot yaw as a function of z (moving along z axis)
+figure("Name","THETA 0")
+[theta_0_model, gof_0, out_0] = fit(xz_dataset.z, xz_dataset.yaw,'Poly1',opt);figure("Name","theta_0")
 plot(theta_0_model,'r')
 hold on
 plot(xz_dataset.z,xz_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-%axis equal
+axis equal
 xlabel("z")
 ylabel("x")
 %% 
-
-% Plotto yaw in funzione di z (movimento ortogonale al marker, guardo come 
-% rileva l'angolo (30°) tra marker e telecamera man mano che mi muovo)
 figure("Name","THETA_30")
 [theta_30_model, gof_30, out_30] = fit(theta_30_dataset.z,theta_30_dataset.yaw,'Poly1',opt);
 plot(theta_30_model,'r')
 hold on
 plot(theta_30_dataset.z,theta_30_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-%axis equal
+axis equal
 xlabel("z")
 ylabel("yaw")
 %% 
-
 figure("Name","THETA_45")
 [theta_45_model, gof_45, out_45] = fit(theta_45_dataset.z,theta_45_dataset.yaw,'Poly1',opt);
 plot(theta_45_model,'r')
 hold on
 plot(theta_45_dataset.z,theta_45_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-%axis equal
+axis equal
 xlabel("z")
 ylabel("yaw")
 %% 
@@ -91,18 +89,9 @@ figure("Name","THETA_60")
 plot(theta_60_model,'r')
 hold on
 plot(theta_60_dataset.z,theta_60_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
-%axis equal
+axis equal
 xlabel("z")
 ylabel("yaw")
-%%
-figure
-plot(theta_0_model)
-hold on
-plot(theta_30_model)
-hold on
-plot(theta_45_model)
-hold on
-plot(theta_60_model)
 
 %% UNCERTAINTY ASESSMENT
 
@@ -112,3 +101,14 @@ sigma_theta_0 = sqrt(gof_0.sse/(height(xz_dataset)-2))
 sigma_theta_30 = sqrt(gof_30.sse/(height(theta_30_dataset)-2))
 sigma_theta_45 = sqrt(gof_45.sse/(height(theta_45_dataset)-2))
 sigma_theta_60 = sqrt(gof_60.sse/(height(theta_60_dataset)-2))
+
+%% UNCERTAINTY MATRIX
+% Use the greatest uncertainty among theta
+U = diag([sigma_zx sigma_xz sigma_theta_0])
+
+%% Uncertainty variation over theta
+theta = [0 30 45 60];
+plot(theta,[sigma_theta_0 sigma_theta_30 sigma_theta_45 sigma_theta_60])
+
+% As the orientation angle increases the uncertainty decreases, it might be
+% because of the sensitivity decrease for greater angles.
