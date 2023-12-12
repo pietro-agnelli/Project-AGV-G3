@@ -35,11 +35,66 @@ theta_60_dataset = [DATASET_THETA_60_1;DATASET_THETA_60_2];
 % Setting common options for all regressions
 opt = fitoptions('Method', 'LinearLeastSquares');
 
-[zx_model, gof1, out1] = fit(zx_dataset.z,zx_dataset.x,'Poly1',opt);
+% Plotto x in funzione di z (movimento parallelo al marker)
+figure("Name", "XZ")
+[zx_model, gof_zx, out_zx] = fit(zx_dataset.x,zx_dataset.z,'Poly1',opt);
 plot(zx_model,'r')
 hold on
-plot(zx_dataset.z,zx_dataset.x,'ob',MarkerSize=4,DisplayName='Data points')
+plot(zx_dataset.x,zx_dataset.z,'ob',MarkerSize=4,DisplayName='Data points')
+axis equal
+xlabel("x")
+ylabel("z")
+%% 
+
+% Plotto z in funzione di x (movimento ortogonale al marker)
+figure("Name","ZX")
+[xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
+[theta_0_model, gof_0, out_0] = fit(xz_dataset.yaw, xz_dataset.z,'Poly1',opt);
+plot(xz_model,'r')
+hold on
+plot(xz_dataset.z,xz_dataset.x,'ob',MarkerSize=4,DisplayName='Data points')
 axis equal
 xlabel("z")
 ylabel("x")
+%% 
+
+% Plotto yaw in funzione di z (movimento ortogonale al marker, guardo come 
+% rileva l'angolo (30°) tra marker e telecamera man mano che mi muovo)
+figure("Name","THETA_30")
+[theta_30_model, gof_30, out_30] = fit(theta_30_dataset.z,theta_30_dataset.yaw,'Poly1',opt);
+plot(theta_30_model,'r')
+hold on
+plot(theta_30_dataset.z,theta_30_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
+%axis equal
+xlabel("z")
+ylabel("yaw")
+%% 
+
+figure("Name","THETA_45")
+[theta_45_model, gof_45, out_45] = fit(theta_45_dataset.z,theta_45_dataset.yaw,'Poly1',opt);
+plot(theta_45_model,'r')
+hold on
+plot(theta_45_dataset.z,theta_45_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
+%axis equal
+xlabel("z")
+ylabel("yaw")
+%% 
+
+
+figure("Name","THETA_60")
+[theta_60_model, gof_60, out_60] = fit(theta_60_dataset.z,theta_60_dataset.yaw,'Poly1',opt);
+plot(theta_60_model,'r')
+hold on
+plot(theta_60_dataset.z,theta_60_dataset.yaw,'ob',MarkerSize=4,DisplayName='Data points')
+%axis equal
+xlabel("z")
+ylabel("yaw")
+%%
+plot(theta_0_model)
+hold on
+plot(theta_30_model)
+hold on
+plot(theta_45_model)
+hold on
+plot(theta_60_model)
 
