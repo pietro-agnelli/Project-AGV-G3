@@ -33,7 +33,7 @@ filtered_odom_z = filtered_odom.z.*1000+filtered_aruco.z(1);
 sigma_ar = readmatrix("../Tests/20231201/04_results/Uaruco.csv");
 sigma_odom = readmatrix("../Tests/20231201/04_results/Uodometry.csv");
 sigma = [sigma_ar(1,1), sigma_odom(1,1)];
-[zf, sigmazf] = clt([filtered_aruco.z';filtered_odom_z'], sigma);
+[zf, sigmazf] = clt([filtered_aruco.z,filtered_odom_z], sigma);
 
 %% PLOT RESULTS
 
