@@ -9,31 +9,31 @@ PATH = "../Tests/20231201/02_preprocessing";
 DATASET_ZX_PARALLEL_1 = readtable(PATH+"/POSE_DATA__2023_12_01_11_10_05.csv");
 DATASET_ZX_PARALLEL_2 = readtable(PATH+"/POSE_DATA__2023_12_01_11_14_05.csv");
 zx_dataset = DATASET_ZX_PARALLEL_2;%[DATASET_ZX_PARALLEL_1; DATASET_ZX_PARALLEL_2];
-save("../Tests/20231201/03_analysis/zx_odom_dataset.mat","zx_dataset")
+save(zx_dataset, "../Tests/20231201/03_analysis/zx_odom_dataset.mat")
 
 % Translation along z axis
 DATASET_XZ_ORTHO_1 = readtable(PATH+"/POSE_DATA__2023_12_01_11_06_54.csv");
 DATASET_XZ_ORTHO_2 = readtable(PATH+"/POSE_DATA__2023_12_01_11_09_02.csv");
 xz_dataset = [DATASET_XZ_ORTHO_1; DATASET_XZ_ORTHO_2];
-save("../Tests/20231201/03_analysis/xz_odom_dataset.mat","xz_dataset")
+save(xz_dataset, "../Tests/20231201/03_analysis/xz_odom_dataset.mat")
 
 % Translation 30 deg from z axis
 DATASET_THETA_30_1 = readtable(PATH+"/POSE_DATA__2023_12_01_11_03_14.csv");
 DATASET_THETA_30_2 = readtable(PATH+"/POSE_DATA__2023_12_01_11_05_08.csv");
 theta_30_dataset = [DATASET_THETA_30_1;DATASET_THETA_30_2];
-save("../Tests/20231201/03_analysis/theta_30_odom_dataset.mat","theta_30_dataset")
+save(theta_30_dataset, "../Tests/20231201/03_analysis/theta_30_odom_dataset.mat")
 
 % Translation 45 deg from z axis
 DATASET_THETA_45_1 = readtable(PATH+"/POSE_DATA__2023_12_01_10_59_33.csv");
 DATASET_THETA_45_2 = readtable(PATH+"/POSE_DATA__2023_12_01_11_01_45.csv");
 theta_45_dataset = [DATASET_THETA_45_1;DATASET_THETA_45_2];
-save("../Tests/20231201/03_analysis/theta_45_odom_dataset.mat","theta_45_dataset")
+save(theta_45_dataset, "../Tests/20231201/03_analysis/theta_45_odom_dataset.mat")
 
 % Translation 60 deg from z axis
 DATASET_THETA_60_1 = readtable(PATH+"/POSE_DATA__2023_12_01_10_55_40.csv");
 DATASET_THETA_60_2 = readtable(PATH+"/POSE_DATA__2023_12_01_10_57_50.csv");
 theta_60_dataset =[DATASET_THETA_60_1;DATASET_THETA_60_2];
-save("../Tests/20231201/03_analysis/theta_60_odom_dataset.mat","theta_60_dataset")
+save(theta_60_dataset, "../Tests/20231201/03_analysis/theta_60_odom_dataset.mat")
 
 %% LINEAR REGRESSION
 
@@ -111,8 +111,7 @@ sigma_theta_60 = sqrt(gof_60.sse/(height(theta_60_dataset)-out_60.numparam))
 % Use the greatest uncertainty among theta, expressing uncertainty in mm
 Uodometry = diag([sigma_zx*1000 ...
                   sigma_xz*1000 ...
-                  max([sigma_theta_0,sigma_theta_30,sigma_theta_45,sigma_theta_60])]);
-
+                  max([sigma_theta_0,sigma_theta_30,sigma_theta_45,sigma_theta_60)])
 writematrix(Uodometry,"../Tests/20231201/04_results/Uodometry.csv")
 
 %% Uncertainty variation over theta

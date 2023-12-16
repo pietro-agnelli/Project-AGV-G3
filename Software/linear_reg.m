@@ -9,26 +9,31 @@ PATH = "../Tests/20231201/02_preprocessing";
 DATASET_ZX_PARALLEL_1 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_10_05.csv");
 DATASET_ZX_PARALLEL_2 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_14_05.csv");
 zx_dataset = DATASET_ZX_PARALLEL_2;%[DATASET_ZX_PARALLEL_1; DATASET_ZX_PARALLEL_2];
+save("../Tests/20231201/03_analysis/zx_dataset.mat","zx_dataset")
 
 % Translation along z axis
 DATASET_XZ_ORTHO_1 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_06_54.csv");
 DATASET_XZ_ORTHO_2 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_09_02.csv");
 xz_dataset = [DATASET_XZ_ORTHO_1; DATASET_XZ_ORTHO_2];
+save("../Tests/20231201/03_analysis/xz_dataset.mat","xz_dataset")
 
 % Translation 30 deg from z axis
 DATASET_THETA_30_1 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_03_14.csv");
 DATASET_THETA_30_2 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_05_08.csv");
 theta_30_dataset = [DATASET_THETA_30_1;DATASET_THETA_30_2];
+save("../Tests/20231201/03_analysis/theta_30_dataset.mat","theta_30_dataset")
 
 % Translation 45 deg from z axis
 DATASET_THETA_45_1 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_10_59_33.csv");
 DATASET_THETA_45_2 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_11_01_45.csv");
 theta_45_dataset = [DATASET_THETA_45_1;DATASET_THETA_45_2];
+save("../Tests/20231201/03_analysis/theta_45_dataset.mat","theta_45_dataset")
 
 % Translation 60 deg from z axis
 DATASET_THETA_60_1 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_10_55_40.csv");
 DATASET_THETA_60_2 = readtable(PATH+"/POSE_DATA___ARUCO_2023_12_01_10_57_50.csv");
 theta_60_dataset =[DATASET_THETA_60_1;DATASET_THETA_60_2];
+save("../Tests/20231201/03_analysis/theta_60_dataset.mat","theta_60_dataset")
 
 %% LINEAR REGRESSION
 
@@ -45,7 +50,6 @@ axis equal
 xlabel("x")
 ylabel("z")
 %% 
-
 % Plot x as a function of z (translation along z axis)
 figure("Name","ZX")
 [xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
@@ -104,7 +108,9 @@ sigma_theta_60 = sqrt(gof_60.sse/(height(theta_60_dataset)-out_60.numparam))
 
 %% UNCERTAINTY MATRIX
 % Use the greatest uncertainty among theta
-Uaruco = diag([sigma_zx sigma_xz sigma_theta_0])
+Uaruco = diag([sigma_zx ...
+               sigma_xz ...
+               max([sigma_theta_0,sigma_theta_30,sigma_theta_45,sigma_theta_60])]);
 
 writematrix(Uaruco,"../Tests/20231201/04_results/Uaruco.csv")
 

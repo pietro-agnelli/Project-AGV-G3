@@ -20,7 +20,7 @@ filtered_odom_z = filtered_odom.z.*1000+filtered_aruco.z(1);
 
 %% REGRESSION
 
-% Example code for uncertainty calculation
+% Uncomment this section if uncertainties aren't given
 % opt = fitoptions('Method', 'LinearLeastSquares');
 % [aruco_model, gof_ar, out_ar] = fit(DATASET_ARUCO.x,DATASET_ARUCO.z,'Poly1',opt);
 % [odom_model, gof_odom, out_odom] = fit(DATASET_ODOMETRY.x,DATASET_ODOMETRY.z,'Poly1',opt);
