@@ -1,7 +1,7 @@
 %% IMPORT DATA
 
 PATH = "../Tests/20231201/03_analysis";
-
+    
 % Choose direction between "xz", "zx", "theta_30", "theta_45", "theta_60",
 % remember to check the code for adjustments
 direction = "xz";
@@ -43,13 +43,24 @@ sigma_ar = readmatrix("../Tests/20231201/04_results/Uaruco.csv");
 sigma_odom = readmatrix("../Tests/20231201/04_results/Uodometry.csv");
 sigma = [sigma_ar(3,3), sigma_odom(3,3)];
 [zf, sigmazf] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigma);
+%%  BAYES FUSION
+[zf_bayes, sigmazf_bayes] = bayes(abs(filtered_aruco.pitch) , filtered_odom_pitch , sigma_ar(3,3), sigma_odom(3,3));
 
-%% PLOT RESULTS
-
+%% PLOT RESULTS USING CLT FUSION
+figure
 plot(zf,'*r',DisplayName="FusedData")
 hold on
 axis equal
 plot(abs(filtered_aruco.pitch),'ob',DisplayName="ArucoData")
 plot(filtered_odom_pitch,'+k',DisplayName="OdometryData")
 title("CLT Fusion")
+legend
+%% PLOT RESULTS USING BAYES FUSION
+figure
+plot(zf_bayes,'*r',DisplayName="FusedData")
+hold on
+axis equal
+plot(abs(filtered_aruco.pitch),'ob',DisplayName="ArucoData")
+plot(filtered_odom_pitch,'+k',DisplayName="OdometryData")
+title("BAYES Fusion")
 legend
