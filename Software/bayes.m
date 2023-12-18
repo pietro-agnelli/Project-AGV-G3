@@ -4,6 +4,6 @@ function [xf, sigmaf] = bayes(x,z,sigmax, sigmaz)
 %sigmax: incertezza primo sensore (numero reale)
 %sigmaz: incertezza secondo sensore (numero reale)
 %xf = (sigmax.^2/(sigmax.^2+sigmaz.^2)).*z' + (sigmaz.^2/(sigmax.^2+sigmaz.^2)).*x';
-xf = sigmax.*((sigmax+sigmaz).^(-1)).*z + sigmaz.*((sigmax+sigmaz).^(-1)).*x
+xf = sigmax.*((sigmax+sigmaz).^(-1)).*z + sigmaz.*((sigmax+sigmaz).^(-1)).*x;
 sigmaf = sqrt((1/sigmax.^2 + 1/sigmaz.^2).^(-1));
 end
