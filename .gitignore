@@ -2,5 +2,4 @@
 *.mat
 *.asv
 # Ignore folders
-
-./Bibliography/.
+./Bibliography/*
