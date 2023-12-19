@@ -41,8 +41,8 @@ filtered_odom_pitch = filtered_odom.pitch+filtered_aruco.pitch(1);
 
 sigma_ar = readmatrix("../Tests/20231201/04_results/Uaruco.csv");
 sigma_odom = readmatrix("../Tests/20231201/04_results/Uodometry.csv");
-sigma = [sigma_ar(3,3), sigma_odom(3,3)];
-[zf, sigmazf] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigma);
+sigmaz = [sigma_ar(3,3), sigma_odom(3,3)];
+[zf, sigmazf] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigmaz);
 %%  BAYES FUSION
 [zf_bayes, sigmazf_bayes] = bayes(abs(filtered_aruco.pitch) , filtered_odom_pitch , sigma_ar(3,3), sigma_odom(3,3));
 

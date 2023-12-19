@@ -6,7 +6,7 @@
 
 The calibration setup consists of:
 
-- Intel Realsense T465 camera at 12 FPS (software limited)
+- Intel Realsense T265 camera at 12 FPS (software limited)
 - Nvidia Jetson Nano controller
 - 3 m Linear rail (useful 2.50 m)
 - Slider
