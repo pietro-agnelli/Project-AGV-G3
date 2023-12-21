@@ -49,7 +49,7 @@ Il teorema di Bayes permette quindi di:
 1. introdurre ipotesi a priori sul misurando,
 2. combinare più letture: $P(x|z_{1},...,z_{n})$ è difficile da calcolare,  mentre facilmente:
 
-$$ P(z_{1},...,z_{n}|x) = \prod_{i=1}^{n}P(z_{i}|x) ⇒P(x|\mathbf{z}) = \frac{\prod_{i=1}^{n}P(z_{i}|x)P(x)}{P(\mathbf{z})}=cP(x)\prod_{i=1}^{n}P(z_{i}|x)$$
+$$ P(z_{1},...,z_{n}|x) = \prod_{i=1}^{n}P(z_{i}|x) ⇒P(x|\mathbf{z}) = \frac{P(x)}{P(\mathbf{z})}\prod_{i=1}^{n}P(z_{i}|x)=cP(x)\prod_{i=1}^{n}P(z_{i}|x)$$
 
 Applichiamo delle $P(z_{i}|x)$ normali:
 
