@@ -122,3 +122,7 @@ plot(theta,[sigma_theta_0 sigma_theta_30 sigma_theta_45 sigma_theta_60])
 
 % As the orientation angle increases the uncertainty decreases, it might be
 % because of the sensitivity decrease for greater angles.
+
+%%
+figure
+hist(out_xz.residuals)
