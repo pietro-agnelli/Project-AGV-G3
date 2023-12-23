@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 
 PREPROCESSED_DIR = './Tests/20231222/02_preprocessing'
 
-for test in glob.glob(os.path.join(PREPROCESSED_DIR, '*___ARUCO_2023_12_22*.csv'))[-1:]:
+for test in glob.glob(os.path.join(PREPROCESSED_DIR, '*__2023_12_22*.csv'))[-10:]:
     df = pd.read_csv(test)
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(
     2, 3, sharex=True, figsize=(10, 6), constrained_layout=True
     )
 
-    ax1.plot(df['frame'][0:-1], df["x"][0:-1])
+    ax1.plot(df['frame'][0:-1], df["x"][0:-1],)
     ax1.set_ylabel(r"x position")
 
     ax2.plot(df['frame'][0:-1],df["y"][0:-1])
