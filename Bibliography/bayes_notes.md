@@ -53,7 +53,25 @@ $$ P(z_{1},...,z_{n}|x) = \prod_{i=1}^{n}P(z_{i}|x) ⇒P(x|\mathbf{z}) = \frac{P
 
 Applichiamo delle $P(z_{i}|x)$ normali:
 
-$$ P(x|z) = cP(x)\prod_{i=1}^{n}\left(\frac{1}{σ\sqrt{2\pi}}e^{\frac{(z-x)^2}{2\sigma^2}}\right) $$
+$$ P(x|z) = cP(x)\prod_{i=1}^{n}\left(\frac{1}{σ\sqrt{2\pi}}e^{-\frac{(z_{i}-x)^2}{2\sigma^2}}\right) $$
 
 - se $P(x)$ ipotesi a priori è una distribuzione *uniforme*:
+
+$$ P(x|z) = \left(cP(x)\prod_{i}\frac{1}{σ\sqrt{2\pi}}\right)\prod_{i}e^{-\frac{(z_{i}-x)^2}{2\sigma^2}} = Ce^{\sum_{i}-\frac{(z_{i}-x)^2}{2\sigma^2}} $$
+
 - se $P(x)$ ipotesi a priori è una distribuzione *normale*:
+
+$$ P(x|z) = \left(cP(x)\prod_{i}\frac{1}{σ\sqrt{2\pi}}\right)\prod_{i}e^{-\frac{(z_{i}-x)^2}{2\sigma^2}} = \left(c\frac{1}{σ_{p}\sqrt{2\pi}}\prod_{i}\frac{1}{σ\sqrt{2\pi}}\right)e^{\left(-\sum_{i}\frac{(z_{i}-x)^2}{2\sigma^2}\right)-\frac{(p-x)^2}{2\sigma_{p}^2}} $$
+
+Le ipotesi a priori possono essere:
+
+- $P(x) = uniform(x_{min},x_{max})$ se si conoscono bene i limiti del fenomeno e sono più stretti del campo di misura,
+- $P(x) = norm(x_{t-1})$ cioè tengo conto dello storico delle misure,
+
+### Inconsistencies handling
+
+Per gestire le incongruenze è possibile introdurre un fattore $f$ di correzione della $\sigma$, nota la massima deviazione ammessa $M$, tale che:
+
+$$ f = \frac{M^2}{M^2-(\Delta z)^2} $$
+
+dove $\Delta z$ è la differenza tra la misura di due sensori, nel caso si utilizzino più sensori si adottano invece altre strategie, ad sempio $\Delta z = z_{i}-\mu_{z}$, oppure $\Delta z = max(z_{i}-z_{j})$. Quindi sostituisco $\sigma$ con $\sigma\cdot f $.
