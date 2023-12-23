@@ -50,7 +50,6 @@ axis equal
 xlabel("x")
 ylabel("z")
 %% 
-
 % Plot x as a function of z (translation along z axis)
 figure("Name","ZX")
 [xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
@@ -123,6 +122,23 @@ plot(theta,[sigma_theta_0 sigma_theta_30 sigma_theta_45 sigma_theta_60])
 % As the orientation angle increases the uncertainty decreases, it might be
 % because of the sensitivity decrease for greater angles.
 
-%%
+%% VISUALIZING RESIDUALS PDFS
 figure
-hist(out_xz.residuals)
+subplot(2,3,1)
+histogram(out_zx.residuals)
+title("XZ Residuals")
+subplot(2,3,2)
+histogram(out_xz.residuals)
+title("ZX Residuals")
+subplot(2,3,3)
+histogram(out_0.residuals)
+title("THETA 0 Residuals")
+subplot(2,3,4)
+histogram(out_30.residuals)
+title("THETA 30 Residuals")
+subplot(2,3,5)
+histogram(out_45.residuals)
+title("THETA 45 Residuals")
+subplot(2,3,6)
+histogram(out_60.residuals)
+title("THETA 60 Residuals")

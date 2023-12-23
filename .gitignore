@@ -1,5 +1,4 @@
 # Ignore matlab saved variables
 *.mat
 *.asv
-# Ignore folders
- Bibliography/*
+*.pdf
