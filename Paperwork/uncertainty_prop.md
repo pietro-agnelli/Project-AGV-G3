@@ -52,4 +52,6 @@ $$\sigma_{\theta_{n}}^{2} = \sigma_{\theta_{n-1}}^{2} + \sigma_{\omega}dt^{2}$$
 
 Si ottiene quindi l'incertezza su $x_{n}$:
 
-$$ \sigma_{x_{n}} = \sqrt{ \sigma_{x_{n-1}}^{2} + dt^{2}\cos^{2}(\theta_{n-2} + \omega_{n-2}dt)(\sigma_{v_{n-3}}^{2} + \sigma_{a}dt^{2})+\frac{9}{4}dt^{4}\cos^{2}(\theta_{n-2} + \omega_{n-2}dt)\sigma_{a}^{2} + (v_{n-2}dt + \frac{3}{2}a_{n-2}dt^{2})^{2} \sin^{2}( \theta_{n-2} + \omega_{n-2}dt)( \sigma_{\theta_{n-3}}^{2} + \sigma_{\omega}dt^{2}) + dt^{2}(v_{n-2}dt + \frac{3}{2}a_{n-2}dt^{2})^{2} \sin^{2}( \theta_{n-2} + \omega_{n-2}dt)\sigma_{\omega}^{2} }$$
+$$\sigma_{x_{n}} = [\sigma_{x_{n-1}}^{2} + dt^{2}\cos^{2}(\theta_{n-2} + \omega_{n-2}dt)(\sigma_{v_{n-3}}^{2} + \sigma_{a}dt^{2}) +\frac{9}{4}dt^{4}\cos^{2}(\theta_{n-2} + \omega_{n-2}dt)\sigma_{a}^{2}+  $$
+
+$$ + (v_{n-2}dt + \frac{3}{2}a_{n-2}dt^{2})^{2} \sin^{2}( \theta_{n-2} + \omega_{n-2}dt)( \sigma_{\theta_{n-3}}^{2} + \sigma_{\omega}dt^{2}) + dt^{2}(v_{n-2}dt + \frac{3}{2}a_{n-2}dt^{2})^{2} \sin^{2}( \theta_{n-2} + \omega_{n-2}dt)\sigma_{\omega}^{2}]^{\frac{1}{2}}$$
