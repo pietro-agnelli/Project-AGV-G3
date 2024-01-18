@@ -19,7 +19,7 @@ sigma0 = 0.4;
 sigma = [];
 sigma(1) = sigma0;
 sigma(2) = 2*sigma(1);
-for n = 3:14000
+for n = 3:700
     sigma = [sigma sqrt(2*sigma(n-1)^2-sigma(n-2)^2)];
 end
 

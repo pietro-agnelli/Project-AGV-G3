@@ -26,7 +26,6 @@ sigma_w = 0.5;
 for i = 2: (nofmeasures)
     theta = [theta theta(i-1)+ w(i-1)*dt];
     vel = [vel vel(i-1)+acc(i-1)*dt];
-
 end
 
 %vettori delle varianze delle grandezze lineari e angolari, ponendo

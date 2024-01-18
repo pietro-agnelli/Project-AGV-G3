@@ -2,9 +2,9 @@ import pandas as pd
 import os, glob
 import matplotlib.pyplot as plt
 
-PREPROCESSED_DIR = './Tests/20231222/02_preprocessing'
+PREPROCESSED_DIR = './Tests/20240118/02_preprocessing'
 
-for test in glob.glob(os.path.join(PREPROCESSED_DIR, '*__2023_12_22*.csv'))[-10:]:
+for test in glob.glob(os.path.join(PREPROCESSED_DIR, '*__2024_01_18*.csv'))[-20:-10]:
     df = pd.read_csv(test)
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(
     2, 3, sharex=True, figsize=(10, 6), constrained_layout=True
