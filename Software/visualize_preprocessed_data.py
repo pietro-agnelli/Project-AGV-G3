@@ -2,7 +2,7 @@ import pandas as pd
 import os, glob
 import matplotlib.pyplot as plt
 
-PREPROCESSED_DIR = './Tests/20240118/02_preprocessing'
+PREPROCESSED_DIR = './Tests/20240123/02_preprocessing'
 
 for test in glob.glob(os.path.join(PREPROCESSED_DIR, '*__2024_01_18*.csv'))[-20:-10]:
     df = pd.read_csv(test)
