@@ -51,7 +51,7 @@ figure
 plot(clt_model,'--g')
 hold on
 axis equal
-plot(frames,zf,'*r',DisplayName="FusedData")
+plot(frames,zf_clt,'*r',DisplayName="FusedData")
 plot(frames,abs(filtered_aruco.pitch),'ob',DisplayName="ArucoData")
 plot(frames,filtered_odom_pitch,'+k',DisplayName="OdometryData")
 title("CLT Fusion")
