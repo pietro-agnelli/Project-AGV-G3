@@ -25,12 +25,12 @@ for i = 1:length(direction_dir)
             % Open the CSV file (you can replace this with your own processing)
             data = readtable(currentCSVFile);
             abs(data.x(end)-data.x(1))
-
-            figure(10)
-            plot(data.x,data.z)
-            axis equal
-            pause
-            kmax = 45;
+% 
+%             figure(10)
+%             plot(data.x,data.z)
+%             axis equal
+%             pause
+            kmax = 36;
             for k = 1:kmax
                 id = (j-1)*kmax+k;
                 if contains(currentSubdirectory, 'ortogonal')
@@ -44,7 +44,7 @@ for i = 1:length(direction_dir)
 end
 
 %% VISUALIZATON
-nbins = 100;
+nbins = 30;
 
 %% Z measurement elaboration
 
@@ -78,6 +78,15 @@ E100Z = rmse(z100Measurements,1.0*ones(size(z100Measurements)))
 E150Z = rmse(z150Measurements,1.50*ones(size(z150Measurements)))
 E200Z = rmse(z200Measurements,2.00*ones(size(z200Measurements)))
 
+M50Z = mean(z50Measurements)
+U50Z = std(z50Measurements)
+M100Z = mean(z100Measurements)
+U100Z = std(z100Measurements)
+M150Z = mean(z150Measurements)
+U150Z = std(z150Measurements)
+M200Z = mean(z200Measurements)
+U200Z = std(z200Measurements)
+
 %% X measurement processing
 
 x50Measurements = trimzeros(xMeasurments(:,1)');
@@ -109,3 +118,12 @@ E50X = rmse(x50Measurements,0.50*ones(size(x50Measurements)))
 E100X = rmse(x100Measurements,1.0*ones(size(x100Measurements)))
 E150X = rmse(x150Measurements,1.50*ones(size(x150Measurements)))
 E200X = rmse(x200Measurements,2.00*ones(size(x200Measurements)))
+
+M50X = mean(x50Measurements)
+U50X = std(x50Measurements)
+M100X = mean(x100Measurements)
+U100X = std(x100Measurements)
+M150X = mean(x150Measurements)
+U150X = std(x150Measurements)
+M200X = mean(x200Measurements)
+U200X = std(x200Measurements)
