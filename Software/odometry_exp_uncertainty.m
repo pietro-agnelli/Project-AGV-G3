@@ -1,5 +1,5 @@
 % Specify the directory containing subdirectories with CSV files
-TEST_DIR = '../Tests/20240123/02_preprocessing';
+TEST_DIR = '../Tests/20240130/02_preprocessing';
 
 % Get a list of all subdirectories in the main directory
 direction_dir = dir(TEST_DIR);
@@ -19,11 +19,18 @@ for i = 1:length(direction_dir)
         csvFiles = dir(fullfile(currentSubdirectory, string(d), 'POSE_DATA__2*.csv'));
 
         for j = 1:length(csvFiles)
-            currentCSVFile = fullfile(currentSubdirectory, string(d), csvFiles(j).name);
+            currentCSVFile = fullfile(currentSubdirectory, string(d), csvFiles(j).name)
+            csvFiles(j).name;
 
             % Open the CSV file (you can replace this with your own processing)
             data = readtable(currentCSVFile);
-            kmax = 48;
+            abs(data.x(end)-data.x(1))
+
+            figure(10)
+            plot(data.x,data.z)
+            axis equal
+            pause
+            kmax = 45;
             for k = 1:kmax
                 id = (j-1)*kmax+k;
                 if contains(currentSubdirectory, 'ortogonal')
