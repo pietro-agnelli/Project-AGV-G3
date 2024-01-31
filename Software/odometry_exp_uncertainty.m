@@ -1,5 +1,5 @@
 % Specify the directory containing subdirectories with CSV files
-TEST_DIR = '../Tests/20240130/02_preprocessing';
+TEST_DIR = '../Tests/20240118/02_preprocessing';
 
 % Get a list of all subdirectories in the main directory
 direction_dir = dir(TEST_DIR);
@@ -30,7 +30,7 @@ for i = 1:length(direction_dir)
 %             plot(data.x,data.z)
 %             axis equal
 %             pause
-            kmax = 36;
+            kmax = 6;
             for k = 1:kmax
                 id = (j-1)*kmax+k;
                 if contains(currentSubdirectory, 'ortogonal')

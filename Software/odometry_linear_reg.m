@@ -41,62 +41,81 @@ save("../Tests/20231201/03_analysis/theta_60_odom_dataset.mat","theta_60_dataset
 opt = fitoptions('Method', 'LinearLeastSquares');
 
 % Plot z as a function of x (translation along x axis)
-figure("Name", "XZ")
+% figure("Name", "XZ")
+figure("Name", "Linear Regression")
 [zx_model, gof_zx, out_zx] = fit(zx_dataset.x,zx_dataset.z,'Poly1',opt);
-plot(zx_model,'r')
+subplot(2,3,1,'replace')
+plot(zx_model,zx_dataset.x,zx_dataset.z)
 hold on
-plot(zx_dataset.x,zx_dataset.z,'*b',MarkerSize=4,DisplayName='Data points')
-axis equal
-xlabel("x")
-ylabel("z")
+% plot(zx_dataset.x,zx_dataset.z,'*b',MarkerSize=4,DisplayName='Data points')
+% hold on
+% axis equal
+grid on
+xlabel("x[m]")
+ylabel("z[m]")
+title("Translation along X")
 %% 
 % Plot x as a function of z (translation along z axis)
-figure("Name","ZX")
+% figure("Name","ZX")
+subplot(2,3,2,"replace")
 [xz_model, gof_xz, out_xz] = fit(xz_dataset.z,xz_dataset.x,'Poly1',opt);
-plot(xz_model,'r')
+plot(xz_model,xz_dataset.z,xz_dataset.x)
 hold on
-plot(xz_dataset.z,xz_dataset.x,'*b',MarkerSize=4,DisplayName='Data points')
-axis equal
-xlabel("z")
-ylabel("x")
+% plot(xz_dataset.z,xz_dataset.x,'*b',MarkerSize=4,DisplayName='Data points')
+title("Translation along Z")
+% axis equal
+grid on
+xlabel("z[m]")
+ylabel("x[m]")
 %%
 % Plot pitch as a function of z (moving along z axis) for different theta
-figure("Name","THETA_0")
+% figure("Name","THETA_0")
+subplot(2,3,3,"replace")
 [theta_0_model, gof_0, out_0] = fit(xz_dataset.z, abs(xz_dataset.pitch),'Poly1',opt);
-plot(theta_0_model,'r')
+plot(theta_0_model,xz_dataset.z,abs(xz_dataset.pitch))
 hold on
-plot(xz_dataset.z,abs(xz_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
-axis equal
-xlabel("z")
-ylabel("pitch")
+% plot(xz_dataset.z,abs(xz_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+title("Translation @0°")
+%axis equal
+grid on
+xlabel("z[m]")
+ylabel("theta[°]")
 %% 
-figure("Name","THETA_30")
+% figure("Name","THETA_30")
+subplot(2,3,4,"replace")
 [theta_30_model, gof_30, out_30] = fit(sqrt(theta_30_dataset.z.^2+theta_30_dataset.x.^2),abs(theta_30_dataset.pitch),'Poly1',opt);
-plot(theta_30_model,'r')
+plot(theta_30_model,sqrt(theta_30_dataset.z.^2+theta_30_dataset.x.^2),abs(theta_30_dataset.pitch))
 hold on
-plot(sqrt(theta_30_dataset.z.^2+theta_30_dataset.x.^2),abs(theta_30_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
-axis equal
-xlabel("z")
-ylabel("pitch")
+% plot(sqrt(theta_30_dataset.z.^2+theta_30_dataset.x.^2),abs(theta_30_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+title("Translation @30°")
+%axis equal
+grid on
+xlabel("z[m]")
+ylabel("theta[°]")
 %% 
-figure("Name","THETA_45")
+% figure("Name","THETA_45")
+subplot(2,3,5,"replace")
 [theta_45_model, gof_45, out_45] = fit(sqrt(theta_45_dataset.z.^2+theta_45_dataset.x.^2),abs(theta_45_dataset.pitch),'Poly1',opt);
-plot(theta_45_model,'r')
+plot(theta_45_model,sqrt(theta_45_dataset.z.^2+theta_45_dataset.x.^2),abs(theta_45_dataset.pitch))
 hold on
-plot(sqrt(theta_45_dataset.z.^2+theta_45_dataset.x.^2),abs(theta_45_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
-axis equal
-xlabel("z")
-ylabel("pitch")
+% plot(sqrt(theta_45_dataset.z.^2+theta_45_dataset.x.^2),abs(theta_45_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+title("Translation @45°")
+%axis equal
+grid on
+xlabel("z[m]")
+ylabel("theta[°]")
 %% 
-figure("Name","THETA_60")
+% figure("Name","THETA_60")
+subplot(2,3,6,"replace[°]")
 [theta_60_model, gof_60, out_60] = fit(sqrt(theta_60_dataset.z.^2+theta_60_dataset.x.^2),abs(theta_60_dataset.pitch),'Poly1',opt);
-plot(theta_60_model,'r')
+plot(theta_60_model,sqrt(theta_60_dataset.z.^2+theta_60_dataset.x.^2),abs(theta_60_dataset.pitch))
 hold on
-plot(sqrt(theta_60_dataset.z.^2+theta_60_dataset.x.^2),abs(theta_60_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
-axis equal
-xlabel("z")
-ylabel("pitch")
-
+% plot(sqrt(theta_60_dataset.z.^2+theta_60_dataset.x.^2),abs(theta_60_dataset.pitch),'*b',MarkerSize=4,DisplayName='Data points')
+title("Translation @60°")
+%axis equal
+grid on
+xlabel("z[m]")
+ylabel("theta[°]")
 %% UNCERTAINTY ASESSMENT
 
 sigma_zx = sqrt(gof_zx.sse/(height(zx_dataset)-out_zx.numparam))
