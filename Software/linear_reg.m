@@ -141,3 +141,24 @@ writematrix(Uaruco,"../Tests/20231201/04_results/Uaruco.csv")
 
 % As the orientation angle increases the uncertainty decreases, it might be
 % because of the sensitivity decrease for greater angles.
+
+%% VISUALIZING RESIDUALS PDFS
+figure
+subplot(2,3,1)
+histogram(out_zx.residuals,30)
+title("XZ Residuals")
+subplot(2,3,2)
+histogram(out_xz.residuals,30)
+title("ZX Residuals")
+subplot(2,3,3)
+histogram(out_0.residuals,30)
+title("THETA 0 Residuals")
+subplot(2,3,4)
+histogram(out_30.residuals,30)
+title("THETA 30 Residuals")
+subplot(2,3,5)
+histogram(out_45.residuals,30)
+title("THETA 45 Residuals")
+subplot(2,3,6)
+histogram(out_60.residuals,30)
+title("THETA 60 Residuals")
