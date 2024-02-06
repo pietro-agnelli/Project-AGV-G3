@@ -1,4 +1,4 @@
-    function [sigmadx] = sigmadx(simgax,sigmatheta, theta)
+function [sigmadeltax] = sigmadeltax(sigmax,sigma2theta, theta)
 %Dalla formula della Propagazione dell'errore
 % x(i)= x(i-1) +dx*cos(theta(i))
 % theta(i) = theta(i-1)+ dtheta
@@ -17,14 +17,7 @@
 %where
 %sigmtheta(i) =[sigma30 sigma45 sigma60 sigma90]
 %sigmatheta(i-1) = [sigma0 sigma30 sigma45 sigma60]
-for i = 2:length(sigmatheta)
-    sigmadtheta = [sigmadtheta sigmatheta(i) - sigmatheta(i-1)]
-end    
-sigma2dtheta = sigmadtheta.^2;
-
-
 for i = 2:length(sigmax)
 sigma2deltax = (- sigmax(i)^2- sigmax(i-1)^2*sigma2theta*sin(theta)^2 + sigma2x(n))./(cos(theta)^2);
-
-sigmadeltax = sqrt(sigma2deltax);
 end
+sigmadeltax = sqrt(sigma2deltax)

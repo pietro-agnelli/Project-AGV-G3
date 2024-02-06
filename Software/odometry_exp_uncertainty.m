@@ -1,5 +1,5 @@
 % Specify the directory containing subdirectories with CSV files
-TEST_DIR = '../Tests/20240118/02_preprocessing';
+TEST_DIR = '../Tests/20240130/02_preprocessing';
 
 % Get a list of all subdirectories in the main directory
 direction_dir = dir(TEST_DIR);
@@ -8,7 +8,7 @@ direction_dir = direction_dir(~ismember({direction_dir.name}, {'.', '..'}));  % 
 
 xMeasurments = zeros(50,4);
 zMeasurments = zeros(50,4);
-
+n_frames = zeros(1,4);
 % Loop through each subdirectory
 for i = 1:length(direction_dir)
     currentSubdirectory = fullfile(TEST_DIR, direction_dir(i).name);
@@ -25,7 +25,7 @@ for i = 1:length(direction_dir)
             % Open the CSV file (you can replace this with your own processing)
             data = readtable(currentCSVFile);
             abs(data.x(end)-data.x(1))
-% 
+            n_frames(d/50) =n_frames(d/50)+ height(data);
 %             figure(10)
 %             plot(data.x,data.z)
 %             axis equal
@@ -39,7 +39,9 @@ for i = 1:length(direction_dir)
                     zMeasurments(id,d/50) = abs(data.z(end-kmax+k)-data.z(k));
                 end
             end
+            
         end
+        n_frames(d/50) = n_frames(d/50)/length(csvFiles)-120
     end
 end
 
@@ -127,3 +129,35 @@ M150X = mean(x150Measurements)
 U150X = std(x150Measurements)
 M200X = mean(x200Measurements)
 U200X = std(x200Measurements)
+%% Test sigmadeltaX
+sigmaw_th = 1;%incertezza teorica +/- 1°/s
+dt = 1/12; %framerate
+%theta = theta0 + w*dt
+%sig2theta = sigma2theta0 + sigma2w*dt^2
+sigma2theta_th = zeros(height(data),1);
+sigma2theta_th(1) = 0.14^2;
+for i = 2:(length(sigma2theta_th))
+    sigma2theta_th(i) = sigma2theta_th(i-1) +sigmaw_th^2*dt^2;
+end  
+
+
+% sigmax(i)^2 = sigmax(i-1)^2 + sigmax^2 sen(theta)^2*(sigmatheta(i-1)^2 + sigmatheta^2)
+
+%sigmax parameter : [sigma50 sigma100 sigma150 sigma200];
+%sigmatheta parameter: [sigma0 sigma30 sigma45 sigma60 sigma90]
+%theta: current angle
+%Sigma2deltax = incognita;
+
+%first of we need to propagate the sigmatheta as
+%sigma2theta = sigma2theta(i) - sigma2theta(i-1)
+%where
+%sigmtheta(i) =[sigma30 sigma45 sigma60 sigma90]
+%sigmatheta(i-1) = [sigma0 sigma30 sigma45 sigma60]
+
+
+
+% for i = 2:length(sigmax)
+%    sigma2theta_th = 0.14^2 +sigmaw_th^2*dt^2;
+% sigma2deltax = (- sigmax(i)^2- sigmax(i-1)^2*sigma2theta*sin(theta)^2 + sigma2x(n))./(cos(theta)^2);
+% end
+% sigmadeltax = sqrt(sigma2deltax)

@@ -7,7 +7,7 @@ direction_dir = direction_dir([direction_dir.isdir]);  % Keep only directories
 direction_dir = direction_dir(~ismember({direction_dir.name}, {'.', '..'}));  % Exclude '.' and '..'
 
 measurements = zeros(50,4);
-
+lenghts = zeros(1,4);
 % Loop through each subdirectory
 for i = 1:length(direction_dir)
     currentSubdirectory = fullfile(TEST_DIR, direction_dir(i).name);
@@ -24,6 +24,7 @@ for i = 1:length(direction_dir)
 
             % Open the CSV file (you can replace this with your own processing)
             data = readtable(currentCSVFile);
+            lenghts(1,col) = lenghts(1,col)+height(data);
 %             abs(data.yaw(end)-data.yaw(1))
 % 
 %             figure(10)
@@ -38,6 +39,7 @@ for i = 1:length(direction_dir)
                 end
             end
         end
+        %lenghts(1,col) =  lenghts(1,col)/j-120
     end
 end
 
@@ -86,9 +88,23 @@ Mtheta90 = mean(theta90Measurements)
 Utheta90 = std(theta90Measurements)
 %% sigmadx
 sigmatheta = [Utheta30,Utheta45,Utheta60,Utheta90];
-sigma2dtheta = [];
-for i = 2:(length(sigmatheta))
-    sigma2dtheta = [sigma2dtheta sigmatheta(i)^2 - sigmatheta(i-1)^2];
-end    
-sigma2dtheta
+% sigma2dtheta = [];
+% for i = 2:(length(sigmatheta))
+%     sigma2dtheta = [sigma2dtheta sigmatheta(i)^2 - sigmatheta(i-1)^2];
+% end    
+% sigma2dtheta
 
+sigmaw_th = 1;%incertezza teorica +/- 1°/s
+dt = 1/12; %framerate
+%theta = theta0 + w*dt
+%sig2theta = sigma2theta0 + sigma2w*dt^2
+sigma2theta_th = zeros(height(data),1);
+sigma2theta_th(1) = 0.14^2;
+for i = 2:(length(sigma2theta_th))
+    sigma2theta_th(i) = sigma2theta_th(i-1) +sigmaw_th^2*dt^2;
+end  
+figure
+sigma2theta_th
+plot(sqrt(sigma2theta_th))
+hold on
+plot([79.9000   61.5000   87.0000   91.8182], sigmatheta, "o")
