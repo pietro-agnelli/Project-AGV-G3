@@ -49,7 +49,7 @@ plot(zx_model,zx_dataset.x,zx_dataset.z)
 hold on
 % plot(zx_dataset.x,zx_dataset.z,'*b',MarkerSize=4,DisplayName='Data points')
 % hold on
-% axis equal
+axis equal
 grid on
 xlabel("x[mm]")
 ylabel("z[mm]")
@@ -63,7 +63,7 @@ plot(xz_model,xz_dataset.z,xz_dataset.x)
 hold on
 % plot(xz_dataset.z,xz_dataset.x,'*b',MarkerSize=4,DisplayName='Data points')
 title("Translation along Z")
-% axis equal
+axis equal
 grid on
 xlabel("z[mm]")
 ylabel("x[mm]")
