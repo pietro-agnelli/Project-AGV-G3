@@ -84,3 +84,11 @@ Mtheta60 = mean(theta60Measurements)
 Utheta60 = std(theta60Measurements)
 Mtheta90 = mean(theta90Measurements)
 Utheta90 = std(theta90Measurements)
+%% sigmadx
+sigmatheta = [Utheta30,Utheta45,Utheta60,Utheta90];
+sigma2dtheta = [];
+for i = 2:(length(sigmatheta))
+    sigma2dtheta = [sigma2dtheta sigmatheta(i)^2 - sigmatheta(i-1)^2];
+end    
+sigma2dtheta
+

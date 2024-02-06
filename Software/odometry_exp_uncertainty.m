@@ -46,46 +46,46 @@ end
 %% VISUALIZATON
 nbins = 30;
 
-%% Z measurement elaboration
-
-z50Measurements = trimzeros(zMeasurments(:,1)');
-z100Measurements = trimzeros(zMeasurments(:,2)');
-z150Measurements = trimzeros(zMeasurments(:,3)');
-z200Measurements = trimzeros(zMeasurments(:,4)');
-
-figure(1)
-subplot(2,2,1)
-histogram(z50Measurements,nbins)
-subplot(2,2,2)
-histogram(z100Measurements, nbins)
-subplot(2,2,3)
-histogram(z150Measurements, nbins)
-subplot(2,2,4)
-histogram(z200Measurements, nbins)
-
-figure(2)
-subplot(2,2,1)
-histogram(z50Measurements-0.50*ones(length(z50Measurements)),nbins)
-subplot(2,2,2)
-histogram(z100Measurements-1.0*ones(length(z100Measurements)), nbins)
-subplot(2,2,3)
-histogram(z150Measurements-1.5*ones(length(z150Measurements)), nbins)
-subplot(2,2,4)
-histogram(z200Measurements-2.0*ones(length(z200Measurements)), nbins)
-
-E50Z = rmse(z50Measurements,0.50*ones(size(z50Measurements)))
-E100Z = rmse(z100Measurements,1.0*ones(size(z100Measurements)))
-E150Z = rmse(z150Measurements,1.50*ones(size(z150Measurements)))
-E200Z = rmse(z200Measurements,2.00*ones(size(z200Measurements)))
-
-M50Z = mean(z50Measurements)
-U50Z = std(z50Measurements)
-M100Z = mean(z100Measurements)
-U100Z = std(z100Measurements)
-M150Z = mean(z150Measurements)
-U150Z = std(z150Measurements)
-M200Z = mean(z200Measurements)
-U200Z = std(z200Measurements)
+% %% Z measurement elaboration
+% 
+% z50Measurements = trimzeros(zMeasurments(:,1)');
+% z100Measurements = trimzeros(zMeasurments(:,2)');
+% z150Measurements = trimzeros(zMeasurments(:,3)');
+% z200Measurements = trimzeros(zMeasurments(:,4)');
+% 
+% figure(1)
+% subplot(2,2,1)
+% histogram(z50Measurements,nbins)
+% subplot(2,2,2)
+% histogram(z100Measurements, nbins)
+% subplot(2,2,3)
+% histogram(z150Measurements, nbins)
+% subplot(2,2,4)
+% histogram(z200Measurements, nbins)
+% 
+% figure(2)
+% subplot(2,2,1)
+% histogram(z50Measurements-0.50*ones(length(z50Measurements)),nbins)
+% subplot(2,2,2)
+% histogram(z100Measurements-1.0*ones(length(z100Measurements)), nbins)
+% subplot(2,2,3)
+% histogram(z150Measurements-1.5*ones(length(z150Measurements)), nbins)
+% subplot(2,2,4)
+% histogram(z200Measurements-2.0*ones(length(z200Measurements)), nbins)
+% 
+% E50Z = rmse(z50Measurements,0.50*ones(size(z50Measurements)))
+% E100Z = rmse(z100Measurements,1.0*ones(size(z100Measurements)))
+% E150Z = rmse(z150Measurements,1.50*ones(size(z150Measurements)))
+% E200Z = rmse(z200Measurements,2.00*ones(size(z200Measurements)))
+% 
+% M50Z = mean(z50Measurements)
+% U50Z = std(z50Measurements)
+% M100Z = mean(z100Measurements)
+% U100Z = std(z100Measurements)
+% M150Z = mean(z150Measurements)
+% U150Z = std(z150Measurements)
+% M200Z = mean(z200Measurements)
+% U200Z = std(z200Measurements)
 
 %% X measurement processing
 
