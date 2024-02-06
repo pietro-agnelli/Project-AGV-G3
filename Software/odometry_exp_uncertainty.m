@@ -158,7 +158,7 @@ sigmaw_th = 1;%incertezza teorica +/- 1°/s
 
 sigma2x =[0.0059 U50X U100X U150X U200X].^2;
 for i = 2:length(sigma2x)
-sigma2theta_th = 0.14^2 +sigmaw_th.^2*n_frames.^2;
-sigma2deltax = (- sigma2x(i)- sigma2x(i-1)^2*sigma2theta_th.*sin(data.yaw(end)).^2 + 50)./(cos(data.yaw(end))^2);
+sigma2theta_th = 0.14^2 +sigmaw_th.^2*(n_frames./12).^2;
+sigma2deltax = (- sigma2x(i)- sigma2x(i-1)^2*sigma2theta_th.*sin(data.yaw(end)).^2 + 0.5)./(cos(data.yaw(end))^2);
 end
 sigmadeltax = sqrt(sigma2deltax)
