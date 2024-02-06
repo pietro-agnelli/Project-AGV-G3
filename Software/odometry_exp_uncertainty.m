@@ -41,7 +41,9 @@ for i = 1:length(direction_dir)
             end
             
         end
-        n_frames(d/50) = n_frames(d/50)/length(csvFiles)-120
+        n_files = height(csvFiles)
+        
+        n_frames(d/50) = n_frames(d/50)/n_files -120
     end
 end
 
@@ -131,14 +133,14 @@ M200X = mean(x200Measurements)
 U200X = std(x200Measurements)
 %% Test sigmadeltaX
 sigmaw_th = 1;%incertezza teorica +/- 1°/s
-dt = 1/12; %framerate
+%dt = 1/12; %framerate
 %theta = theta0 + w*dt
 %sig2theta = sigma2theta0 + sigma2w*dt^2
-sigma2theta_th = zeros(height(data),1);
-sigma2theta_th(1) = 0.14^2;
-for i = 2:(length(sigma2theta_th))
-    sigma2theta_th(i) = sigma2theta_th(i-1) +sigmaw_th^2*dt^2;
-end  
+% sigma2theta_th = zeros(height(data),1);
+% sigma2theta_th(1) = 0.14^2;
+% for i = 2:(length(sigma2theta_th))
+%     sigma2theta_th(i) = sigma2theta_th(i-1) +sigmaw_th^2*n_frames^2;
+% end  
 
 
 % sigmax(i)^2 = sigmax(i-1)^2 + sigmax^2 sen(theta)^2*(sigmatheta(i-1)^2 + sigmatheta^2)
@@ -154,10 +156,9 @@ end
 %sigmtheta(i) =[sigma30 sigma45 sigma60 sigma90]
 %sigmatheta(i-1) = [sigma0 sigma30 sigma45 sigma60]
 
-
-
-% for i = 2:length(sigmax)
-%    sigma2theta_th = 0.14^2 +sigmaw_th^2*dt^2;
-% sigma2deltax = (- sigmax(i)^2- sigmax(i-1)^2*sigma2theta*sin(theta)^2 + sigma2x(n))./(cos(theta)^2);
-% end
-% sigmadeltax = sqrt(sigma2deltax)
+sigma2x =[0.0059 U50X U100X U150X U200X].^2;
+for i = 2:length(sigma2x)
+sigma2theta_th = 0.14^2 +sigmaw_th.^2*n_frames.^2;
+sigma2deltax = (- sigma2x(i)- sigma2x(i-1)^2*sigma2theta_th.*sin(data.yaw(end)).^2 + 50)./(cos(data.yaw(end))^2);
+end
+sigmadeltax = sqrt(sigma2deltax)
