@@ -30,7 +30,7 @@ for n = 1:length(direction_dir)
 %             plot(data.x,data.z)
 %             axis equal
 %             pause
-            kmax = 6;
+            kmax = 48;
             for k = 1:kmax
                 n = (j-1)*kmax+k;
                 if contains(currentSubdirectory, 'ortogonal')
