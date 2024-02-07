@@ -99,7 +99,7 @@ dt = 1/12; %framerate
 %theta = theta0 + w*dt
 %sig2theta = sigma2theta0 + sigma2w*dt^2
 sigma2theta_th = zeros(height(data),1);
-sigma2theta_th(1) = 0.14^2;
+sigma2theta_th(1) = 0.39^2;
 for i = 2:(length(sigma2theta_th))
     sigma2theta_th(i) = sigma2theta_th(i-1) +sigmaw_th^2*dt^2;
 end  

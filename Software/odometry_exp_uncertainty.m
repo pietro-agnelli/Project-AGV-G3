@@ -10,8 +10,8 @@ xMeasurments = zeros(50,4);
 zMeasurments = zeros(50,4);
 n_frames = zeros(1,4);
 % Loop through each subdirectory
-for i = 1:length(direction_dir)
-    currentSubdirectory = fullfile(TEST_DIR, direction_dir(i).name);
+for n = 1:length(direction_dir)
+    currentSubdirectory = fullfile(TEST_DIR, direction_dir(n).name);
 
     for d = 50:50:200
 
@@ -32,11 +32,11 @@ for i = 1:length(direction_dir)
 %             pause
             kmax = 6;
             for k = 1:kmax
-                id = (j-1)*kmax+k;
+                n = (j-1)*kmax+k;
                 if contains(currentSubdirectory, 'ortogonal')
-                    xMeasurments(id,d/50) = abs(data.x(end-kmax+k)-data.x(k));
+                    xMeasurments(n,d/50) = abs(data.x(end-kmax+k)-data.x(k));
                 else
-                    zMeasurments(id,d/50) = abs(data.z(end-kmax+k)-data.z(k));
+                    zMeasurments(n,d/50) = abs(data.z(end-kmax+k)-data.z(k));
                 end
             end
             
@@ -157,8 +157,11 @@ sigmaw_th = 1;%incertezza teorica +/- 1°/s
 %sigmatheta(i-1) = [sigma0 sigma30 sigma45 sigma60]
 
 sigma2x =[0.0059 U50X U100X U150X U200X].^2;
-for i = 2:length(sigma2x)
-sigma2theta_th = 0.14^2 +sigmaw_th.^2*(n_frames./12).^2;
-sigma2deltax = (- sigma2x(i)- sigma2x(i-1)^2*sigma2theta_th.*sin(data.yaw(end)).^2 + 0.5)./(cos(data.yaw(end))^2);
+sigma2theta_th = zeros(1,4);
+sigma2deltax = zeros(1,4);
+for n = 2:length(sigma2x)
+sigma2theta_th(n-1) = 0.39^2 + sigmaw_th.^2*(n_frames(n-1)/12).^2;
+sigma2deltax(n-1) = (sigma2x(n) - sigma2x(n-1)^2 - 0.5^2 .* sigma2theta_th(n-1).*sin(data.yaw(end)).^2)./(cos(data.yaw(end)).^2);
 end
-sigmadeltax = sqrt(sigma2deltax)
+sigma2theta_th
+sigma2deltax
