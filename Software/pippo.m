@@ -47,7 +47,7 @@ for n = 1:length(direction_dir)
             
         end
         n_files = height(csvFiles);
-        n_frames(d/50) = n_frames(d/50)/n_files -120;
+        n_frames(d/50) = n_frames(d/50)/n_files;
         sigma2theta_th(d/50) = 0.39^2;
         for i = 2:(height(data))
             sigma2theta_th(d/50) = sigma2theta_th(d/50) +sigmaw_th^2*dt^2;
@@ -113,7 +113,7 @@ U200X = std(x200Measurements)
 %% Test sigmadeltaX
 sigmaw_th = 1;%incertezza teorica +/- 1°/s
 
-sigma2x =[0.0 U50X U100X U150X U200X].^2;
+sigma2x =[0.0059 U50X U100X U150X U200X].^2;
 
 sigma2deltax = zeros(1,4);
 

@@ -1,9 +1,12 @@
-% position x(n) = x(n-1) + (v(n-1)*dt + a(n-1)*0.5*dt^2)*cos(theta(n-1))
+% position x(n) = x(n-1) + v(n-1)*dt + a(n-1)*0.5*dt^2*cos(theta(n-1))
+% where
+% v(n) = v(n-1) + a*cos(theta(n-1))*dt
 % uncertainty propagates as follow
 % ux(n) = sqrt(ux(n-1)^2 + (uv(n-1)*cos(theta(n-1))*dt)^2 +
 %       (ua*cos(theta(n-1))*dt)^2) + 
 %       ((v(n-1)*dt + a(n-1)*0.5*dt^2)*sin(theta(n-1))*utheta(n-1))^2
-% uv(n) = sqrt(uv(n-1)^2+ua^2*dt^2)
+% uv(n) = sqrt(uv(n-1)^2 + ua^2*cos(theta(n-1))^2*dt^2 +
+%       utheta(n-1)^2*sin(theta(n-1))^2*dt^2)
 % utheta(n) = sqrt(utheta(n-1)^2+uw^2*dt^2)
 
 % at 12 fps
@@ -28,12 +31,15 @@ ux(1) = 0.0059;
 utheta(1) = 0.32*pi/180;
 
 for n = 2:height(data)
-    a = (v(n)-v(n-1))/dt;
+    a = abs((v(n)-v(n-1))/dt);
     utheta(n) = sqrt(utheta(n-1)^2+uw^2*dt^2);
-    uv(n) = sqrt(uv(n-1)^2+ua^2*dt^2);
-    ux(n) = sqrt(ux(n-1)^2 + (uv(n-1)*cos(theta(n-1))*dt)^2 + ...
-        (ua*cos(theta(n-1))*dt)^2) + ...
-    ((v(n-1)*dt + a*0.5*dt^2)*sin(theta(n-1))*utheta(n-1))^2;
+    uv(n) = sqrt(uv(n-1)^2 + ua^2*cos(theta(n-1))^2*dt^2 + ...
+        utheta(n-1)^2*sin(theta(n-1))^2*dt^2);
+    ux(n) = sqrt(ux(n-1)^2 + (uv(n-1)*dt)^2 + ...
+        (ua*0.5*dt^2*cos(theta(n-1))*0.5*dt^2)^2 + ...
+    ((a*0.5*dt^2)*sin(theta(n-1))*utheta(n-1))^2);
 end
 
 plot(ux)
+hold on
+plot([0 n_frames],sqrt(sigma2x),'o')
