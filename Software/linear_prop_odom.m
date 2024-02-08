@@ -133,7 +133,8 @@ for n = 2:(height(data))
     sigma2x(n) = sigma2x(n-1) + (data.x(n)-data.x(n-1))^2 .* sigma2theta_th(n-1).*sin(data.yaw(n-1)*pi/180).^2 + cos(data.yaw(n-1)*pi/180).^2 * 0.0032;
 end
 
-plot(sigma2x)
+figure
+plot(sqrt(sigma2x))
 hold on
 plot(sigma2theta_th)
 
@@ -166,8 +167,7 @@ sigma2x =[0.0059 U50X U100X U150X U200X].^2;
 sigma2theta_th = zeros(1,4);
 sigma2deltax = zeros(1,4);
 for n = 2:length(sigma2x)
-sigma2theta_th(n-1) = 0.39^2 + sigmaw_th.^2*(n_frames(n-1)/12).^2;
-sigma2deltax(n-1) = (sigma2x(n) - sigma2x(n-1)^2 - 0.5^2 .* sigma2theta_th(n-1).*sin(data.yaw(end)).^2)./(cos(data.yaw(end)).^2);
+sigma2deltax(n-1) = (sigma2x(n) - sigma2x(n-1) -(0.5).^2 .* sigma2theta_th(n-1) .* cos(data.yaw(end)).^2)./(sin(data.yaw(end)).^2);
 end
 sigma2theta_th
 sigma2deltax

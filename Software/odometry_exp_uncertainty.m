@@ -8,7 +8,6 @@ direction_dir = direction_dir(~ismember({direction_dir.name}, {'.', '..'}));  % 
 
 xMeasurments = zeros(50,4);
 zMeasurments = zeros(50,4);
-n_frames = zeros(1,4);
 % Loop through each subdirectory
 for n = 1:length(direction_dir)
     currentSubdirectory = fullfile(TEST_DIR, direction_dir(n).name);
@@ -43,7 +42,7 @@ for n = 1:length(direction_dir)
 end
 
 %% VISUALIZATON
-nbins = 30;
+nbins = 20;
 
 % %% Z measurement elaboration
 % 
@@ -126,3 +125,10 @@ M150X = mean(x150Measurements)
 U150X = std(x150Measurements)
 M200X = mean(x200Measurements)
 U200X = std(x200Measurements)
+
+%% Visualization
+
+figure
+plot([M50X M100X M150X M200X],[U50X U100X U150X U200X],"-or")
+axis equal
+grid on

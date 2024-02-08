@@ -84,3 +84,7 @@ Mtheta60 = mean(theta60Measurements)
 Utheta60 = std(theta60Measurements)
 Mtheta90 = mean(theta90Measurements)
 Utheta90 = std(theta90Measurements)
+
+%% Visualization
+figure
+plot([Mtheta30 Mtheta45 Mtheta60 Mtheta90],[Utheta30 Utheta45 Utheta60 Utheta90], '-ob')
