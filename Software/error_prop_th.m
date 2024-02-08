@@ -42,4 +42,4 @@ end
 
 plot(ux)
 hold on
-plot([0 n_frames],sqrt(sigma2x),'o')
+% plot([0 n_frames],sqrt(sigma2x),'o')

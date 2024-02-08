@@ -19,13 +19,12 @@ for n = 1:length(direction_dir)
         csvFiles = dir(fullfile(currentSubdirectory, string(d), 'POSE_DATA__2*.csv'));
 
         for j = 1:length(csvFiles)
-            currentCSVFile = fullfile(currentSubdirectory, string(d), csvFiles(j).name)
+            currentCSVFile = fullfile(currentSubdirectory, string(d), csvFiles(j).name);
             csvFiles(j).name;
 
             % Open the CSV file (you can replace this with your own processing)
             data = readtable(currentCSVFile);
-            abs(data.x(end)-data.x(1))
-            n_frames(d/50) =n_frames(d/50)+ height(data);
+%             abs(data.x(end)-data.x(1))
 %             figure(10)
 %             plot(data.x,data.z)
 %             axis equal
@@ -39,11 +38,7 @@ for n = 1:length(direction_dir)
                     zMeasurments(n,d/50) = abs(data.z(end-kmax+k)-data.z(k));
                 end
             end
-            
         end
-        n_files = height(csvFiles)
-        
-        n_frames(d/50) = n_frames(d/50)/n_files -120
     end
 end
 
@@ -131,37 +126,3 @@ M150X = mean(x150Measurements)
 U150X = std(x150Measurements)
 M200X = mean(x200Measurements)
 U200X = std(x200Measurements)
-%% Test sigmadeltaX
-sigmaw_th = 1;%incertezza teorica +/- 1°/s
-%dt = 1/12; %framerate
-%theta = theta0 + w*dt
-%sig2theta = sigma2theta0 + sigma2w*dt^2
-% sigma2theta_th = zeros(height(data),1);
-% sigma2theta_th(1) = 0.14^2;
-% for i = 2:(length(sigma2theta_th))
-%     sigma2theta_th(i) = sigma2theta_th(i-1) +sigmaw_th^2*n_frames^2;
-% end  
-
-
-% sigmax(i)^2 = sigmax(i-1)^2 + sigmax^2 sen(theta)^2*(sigmatheta(i-1)^2 + sigmatheta^2)
-
-%sigmax parameter : [sigma50 sigma100 sigma150 sigma200];
-%sigmatheta parameter: [sigma0 sigma30 sigma45 sigma60 sigma90]
-%theta: current angle
-%Sigma2deltax = incognita;
-
-%first of we need to propagate the sigmatheta as
-%sigma2theta = sigma2theta(i) - sigma2theta(i-1)
-%where
-%sigmtheta(i) =[sigma30 sigma45 sigma60 sigma90]
-%sigmatheta(i-1) = [sigma0 sigma30 sigma45 sigma60]
-
-sigma2x =[0.0059 U50X U100X U150X U200X].^2;
-sigma2theta_th = zeros(1,4);
-sigma2deltax = zeros(1,4);
-for n = 2:length(sigma2x)
-sigma2theta_th(n-1) = 0.39^2 + sigmaw_th.^2*(n_frames(n-1)/12).^2;
-sigma2deltax(n-1) = (sigma2x(n) - sigma2x(n-1)^2 - 0.5^2 .* sigma2theta_th(n-1).*sin(data.yaw(end)).^2)./(cos(data.yaw(end)).^2);
-end
-sigma2theta_th
-sigma2deltax
