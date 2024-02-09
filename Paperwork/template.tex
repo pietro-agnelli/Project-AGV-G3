@@ -1,0 +1,133 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 2.0 (February 7, 2023)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Author:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+%
+% NOTE: The bibliography needs to be compiled using the biber engine.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified by:
+% Pakorn Wangsuekul (joe@ai.iit.tsukuba.ac.jp)
+%
+% Version 2.1 (July 9, 2023)
+% Version 2.2 by Hiroaki Yano (July 11, 2023) 
+% Version 2.3 (July 13, 2023)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	a4paper, % Paper size, use either a4paper or letterpaper
+	10pt, % Default font size, can also use 11pt or 12pt, although this is not recommended
+	% unnumberedsections, % Uncomment to remove section numbering
+	% twoside, % Uncomment to enable two side traditional mode where headers and footers change between odd and even pages
+]{LTJournalArticle}
+
+\addbibresource{bibliography.bib} % BibLaTeX bibliography file
+
+\headerleft{Laboratorio di Misure Industriali} % Left running head
+\headerright{Gruppo M: Pietro Agnelli, Matteo Berardi, Riccardo Valtorta} % Right running head: Student ID and Name
+
+\footertext{} % Text to appear in the footer, leave this command empty for no footer text
+
+\setcounter{page}{1} % Page number of the first page, set this to a higher number if the article is to be part of a larger publication
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+% Report title
+\title{Implementazione di sistemi di correzione della stima della posa di un AGV agricolo all'interno di un filare.} % Article title, max 3 lines recommended
+
+% Author's name
+\author{
+	Gruppo M: Pietro Agnelli, Matteo Berardi, Riccardo Valtorta \hfill \fontsize{9pt}{12pt}\selectfont\\
+}
+
+% Supervisor name and Laboratory name
+\date{
+         Laboratorio di Misure Industriali %\hfill Insert Laboratory Name Here
+}
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+\maketitle % Output the title section
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Calibrazione della camera}
+
+Il primo passo, indispensabile prima di eseguire misurazioni attraverso sistemi di visione, è ricavare i parametri intrinseci della videocamera Intel Realsense T265 utilizzata. La procedura di calibrazione consiste nell'acquisizione di $30$ immagini di un pattern noto (una scacchiera appositamente realizzata e fissata su un supporto rigido), in diverse posizioni e prospettive, che vengono poi processate dal software della telecamera per effettuare la stima dei parametri intrinseci. 
+
+\section{Setup sperimentale}
+\subsection{Setup lineare}
+Il primo setup è stato realizzato montando una guida rettilinea su un banco ottico. La guida presenta un profilo munito di sedi per dadi "a T", all'interno delle quali viene fatto scorrere il carrello. La telecamera può essere montata sul carrello orientata in vario modo rispetto all'asse del movimento. La guida ha una lunghezza utile di $2\ m$.
+\subsection{Setup angolare}
+Il secondo setup, pensato per poter permettere unicamente la rotazione sul piano orizzontale, è stato realizzato incernierando l'estremità di un'asta al banco ottico. La telecamera è stata montata in corrispondenza della cerniera, in modo da minimizzare la componente traslatoria del movimento, e quindi le interferenze nelle rilevazioni sperimentali.
+
+\section{Stima dell'incertezza}
+
+\subsection{Marker ArUco}
+
+Per stimare l'incertezza in ciascuna delle due direzioni e ad angoli differenti abbiamo posizionato marker ArUco $100mm\times100mm$ perpendicolarmente all'asse ottico della camera, quindi abbiamo mosso la camera nella direzione perpendicolare a quella lungo la quale eravamo interessati a stimare l'incertezza. Abbiamo quindi eseguito una regressione lineare ai minimi quadrati e stimato l'incertezza attraverso la \ref{eq:lls}.
+
+\begin{equation}
+    \sigma = \sqrt{\frac{\sum_{j=1}^{m}(y(x_{j})-y_{j})}{m-n}}
+    \label{eq:lls}
+\end{equation}
+
+\subsection{Odometria visivo-inerziale}
+
+La stima dell'incertezza legata all'odometria risulta più complessa, in quanto si tratta di un metodo di misura \emph{incrementale}. Inoltre, gli algoritmi utilizzati dal software della telecamera non sono pubblicamente disponibili, rendendo lo strumento, di fatto, una \emph{black-box}.
+\paragraph{Incertezza statica} La prima prova eseguita è stata semplicemente verificare la corretta stima della posizione a telecamera ferma. L'acquisizione è stata avviata per $5$ secondi a $12 fps$ \footnote{frame per second}, per un totale di $10$ prove. L'incertezza è stata calcolata come in \ref{eq:lls}, ponendo $y_{j}=0$ per $j=1,2,...,m$ e
+$n=1$.
+\paragraph{Incertezza incrementale} La stima dell'incertezza incrementale si è svolta in due fasi. A partire dal modello \ref{eq:model}, e assumendo assenza di correlazione tra le incertezze, abbiamo ottenuto la propagazione dell'incertezza \ref{eq:prop}. Ragionamenti analoghi valgono per la coordinata $z$.
+
+\begin{equation}
+        x_n =x_{n-1}+\Delta x  \sin{(\theta_{n-1})}
+    \label{eq:model}
+\end{equation}
+
+\begin{equation}
+        \sigma_{x_n}^2 = \sigma_{x_{n-1}}^2 + \sigma_{\Delta x}^2 \sin{(\theta_{n-1})}^2 + \sigma_{\theta_{n-1}}^2 \Delta x ^2 \cos{\theta_{n-1}}^2
+        \label{eq:prop}
+\end{equation}
+
+Dove
+
+\begin{equation}
+    \sigma_{\theta_{n}}^2 = \sigma_{\theta_{n-1}}^2 + \sigma_{\omega}^2 \delta t^2
+    \label{eq:angleprop}
+\end{equation}
+
+Quindi, abbiamo verificato sperimentalmente la correttezza del modello. I risultati ottenuti attraverso i test a distanze (angoli) noti, tuttavia, non risultavano coerenti con il modello, pertanto, non disponendo di informazioni sugli algoritmi e i sensori interni alla videocamera, abbiamo preferito affidare la stima dell'incertezza incrementale ad una regressione effettuata sui dati sperimentali.
+
+\section{Algoritmi implementati}
+
+Il primo algoritmo consiste nell'implementazione del teorema del limite centrale in una funzione.
+
+Il secondo algoritmo sfrutta il teorema di Bayes.
+
+Infine il terzo algoritmo realizza un filtro di Kalman.
+
+%----------------------------------------------------------------------------------------
+%	 REFERENCES
+%----------------------------------------------------------------------------------------
+
+\printbibliography % Output the bibliography
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

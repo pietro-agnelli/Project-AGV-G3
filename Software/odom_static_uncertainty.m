@@ -35,14 +35,15 @@ end
 
 XstaticMeasurments = trimzeros(XstaticMeasurments);
 MStaticX = mean(XstaticMeasurments);
-UStaticX = std(XstaticMeasurments);
+UStaticX = sqrt(sum(XstaticMeasurments.^2)/(length(XstaticMeasurments)-1))%std(XstaticMeasurments);
 ZstaticMeasurments = trimzeros(ZstaticMeasurments);
 MStaticZ = mean(ZstaticMeasurments);
-UStaticZ = std(ZstaticMeasurments);
+UStaticZ = sqrt(sum(ZstaticMeasurments.^2)/(length(ZstaticMeasurments)-1))%std(ZstaticMeasurments);
 
 figure
 plot(XstaticMeasurments,ZstaticMeasurments,'xr')
 hold on
 error_ellipse(cov(XstaticMeasurments,ZstaticMeasurments), [MStaticX MStaticZ],'conf',0.95,'style','b')
+plot(MStaticX,MStaticZ,"ok")
 axis equal
 grid on
