@@ -43,8 +43,8 @@ for nfile = 1:length(direction_dir)
                     xData(n,6) = data.frame(end);
                     xData(n,1) = abs(data.x(end-kmax+k)-data.x(k));
                     xData(n,2) = abs(data.z(end-kmax+k)-data.z(k));
-                    xData(n,3) = abs(data.vx(end-100,1));
-                    xData(n,4) = abs(data.vz(end-100,1));
+                    xData(n,3) = abs(mean(data.vx));
+                    xData(n,4) = abs(mean(data.vz));
                     xData(n,5) = abs(data.yaw(end-kmax+k)-data.yaw(k));
                     xData(n,7) = UXexp.XUncertainty(d/50+1);
                 end
@@ -52,8 +52,8 @@ for nfile = 1:length(direction_dir)
                     zData(n,6) = data.frame(end);
                     zData(n,1) = abs(data.x(end-kmax+k)-data.x(k));
                     zData(n,2) = abs(data.z(end-kmax+k)-data.z(k));
-                    zData(n,3) = abs(data.vx(end,1));
-                    zData(n,4) = abs(data.vz(end,1));
+                    zData(n,3) = abs(mean(data.vx));
+                    zData(n,4) = abs(mean(data.vz));
                     zData(n,5) = abs(data.yaw(end-kmax+k)-data.yaw(k));
                     zData(n,7) = UZexp.ZUncertainty(d/50+1);
                 end
@@ -61,8 +61,8 @@ for nfile = 1:length(direction_dir)
                     ThetaData(na,6) = data.frame(end);
                     ThetaData(na,1) = abs(data.x(end-kmax+k)-data.x(k));
                     ThetaData(na,2) = abs(data.z(end-kmax+k)-data.z(k));
-                    ThetaData(na,3) = abs(data.vx(end,1));
-                    ThetaData(na,4) = abs(data.vz(end,1));
+                    ThetaData(na,3) = abs(mean(data.vx));
+                    ThetaData(na,4) = abs(mean(data.vz));
                     ThetaData(na,5) = abs(data.yaw(end-kmax+k)-data.yaw(k));
                     if d==90
                         ThetaData(na,7) = UThetaexp.UTheta(4);
@@ -93,6 +93,8 @@ plot(zData(:,2),zMdl.Fitted,".r",DisplayName="Predicted Z uncertainty")
 legend(Location="best")
 xlabel("Distance[m]")
 ylabel("Uncertainty[m]")
+grid on
+title("Translation uncertainty models")
 figure
 hold on
 plot(ThetaData(:,5),ThetaData(:,end),"om",DisplayName="Actual Theta uncertainty")
@@ -100,7 +102,8 @@ plot(ThetaData(:,5),thetaMdl.Fitted,".r",DisplayName="Predicted Theta uncertaint
 xlabel("Angle[°]")
 ylabel("Uncertainty[°]")
 legend(Location="best")
-
+title("Rotation uncertainty models")
+grid on
 %% Saving results
 
 save("../Tests/20240130/04_results/UncertaintyModels","xMdl","zMdl","thetaMdl")
