@@ -28,6 +28,7 @@ for ndir = 1:length(direction_dir)
                 n = (j-1)*kmax+k;
                 XstaticMeasurments(n+n*(d/50-1)) = data.x(k)-data.x(1);
                 ZstaticMeasurments(n+n*(d/50-1)) = data.z(k)-data.z(1);
+                ThetastaticMeasurments(n+n*(d/50-1)) = data.yaw(k)-data.yaw(1);
             end
         end
     end
@@ -39,6 +40,9 @@ UStaticX = sqrt(sum(XstaticMeasurments.^2)/(length(XstaticMeasurments)-1))%std(X
 ZstaticMeasurments = trimzeros(ZstaticMeasurments);
 MStaticZ = mean(ZstaticMeasurments);
 UStaticZ = sqrt(sum(ZstaticMeasurments.^2)/(length(ZstaticMeasurments)-1))%std(ZstaticMeasurments);
+ThetastaticMeasurments = trimzeros(ThetastaticMeasurments);
+MStaticTheta = mean(ThetastaticMeasurments);
+UStaticTheta = sqrt(sum(ThetastaticMeasurments.^2)/(length(ThetastaticMeasurments)-1))
 
 figure
 plot(XstaticMeasurments,ZstaticMeasurments,'xr')
@@ -47,3 +51,6 @@ error_ellipse(cov(XstaticMeasurments,ZstaticMeasurments), [MStaticX MStaticZ],'c
 plot(MStaticX,MStaticZ,"ok")
 axis equal
 grid on
+
+%% Save results
+save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")

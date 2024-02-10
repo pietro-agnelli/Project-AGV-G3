@@ -1,6 +1,8 @@
 % Specify the directory containing subdirectories with CSV files
 TEST_DIR = '../Tests/20240130/02_preprocessing';
 
+Ustatic = load("../Tests/20240130/04_results/staticUncertainty.mat");
+%%
 % Get a list of all subdirectories in the main directory
 direction_dir = dir(TEST_DIR);
 direction_dir = direction_dir([direction_dir.isdir]);  % Keep only directories
@@ -84,7 +86,14 @@ nbins = 20;
 % U150Z = std(z150Measurements)
 % M200Z = mean(z200Measurements)
 % U200Z = std(z200Measurements)
+% ZUncertainty = [Ustatic.UStaticZ U50Z U100Z U150Z U200Z];
+%% Visualization Z
 
+figure
+plot([Ustatic.MStaticZ M50Z M100Z M150Z M200Z],ZUncertainty,"-or")
+axis equal
+grid on
+title("Uncertainty on Z measure")
 %% X measurement processing
 
 x50Measurements = trimzeros(xMeasurments(:,1)');
@@ -125,10 +134,15 @@ M150X = mean(x150Measurements)
 U150X = std(x150Measurements)
 M200X = mean(x200Measurements)
 U200X = std(x200Measurements)
-
-%% Visualization
+XUncertainty = [Ustatic.UStaticX U50X U100X U150X U200X];
+%% Visualization X
 
 figure
-plot([M50X M100X M150X M200X],[U50X U100X U150X U200X],"-or")
+plot([Ustatic.MStaticX M50X M100X M150X M200X],XUncertainty,"-or")
 axis equal
 grid on
+title("Uncertainty on X measure")
+%% Save X data
+save("../Tests/20240130/04_results/ExpXUncertainty","XUncertainty")
+%% Save Z data
+% save("../Tests/20240130/04_results/ExpZUncertainty","ZUncertainty")

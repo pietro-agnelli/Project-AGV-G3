@@ -85,6 +85,10 @@ Utheta60 = std(theta60Measurements)
 Mtheta90 = mean(theta90Measurements)
 Utheta90 = std(theta90Measurements)
 
+UTheta = [Utheta30 Utheta45 Utheta60 Utheta90];
+
 %% Visualization
 figure
-plot([Mtheta30 Mtheta45 Mtheta60 Mtheta90],[Utheta30 Utheta45 Utheta60 Utheta90], '-ob')
+plot([Mtheta30 Mtheta45 Mtheta60 Mtheta90],UTheta, '-ob')
+%% Save
+save("../Tests/20240130/04_results/ExpThetaUncertainty.mat","UTheta")
