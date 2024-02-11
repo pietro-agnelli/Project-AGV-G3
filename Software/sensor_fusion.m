@@ -41,9 +41,43 @@ sigma_ar = readmatrix("../Tests/20231201/04_results/Uaruco.csv");
 sigma_odom = readmatrix("../Tests/20231201/04_results/Uodometry.csv");
 sigmaz = [sigma_ar(3,3)*ones(height(filtered_aruco),1), uncertainty_prop(sigma_odom(3,3),height(filtered_odom_pitch))'];
 %% CLT FUSION
-[zf_clt, sigmazf_clt] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigmaz);
+%[zf_clt, sigmazf_clt] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigmaz);
 %%  BAYES FUSION
-[zf_bayes, sigmazf_bayes] = bayes(abs(filtered_aruco.pitch) , filtered_odom_pitch , sigma_ar(3,3), sigma_odom(3,3));
+close all
+x = abs(filtered_aruco.pitch);
+z = abs(filtered_odom_pitch);
+sigmax = sigma_ar(3,3); 
+sigmaz = sigma_odom(3,3);
+
+%distances
+pitch = 0:180/343:180;
+
+%devo calcolare la probabilità di una distanza fissata d data la misura x e
+%z
+
+Pd_dato_x = 1/(sqrt(2*pi)*sigmax).*exp((-1/2).*(pitch-x).^2/sigmax^2);
+Pd_dato_z = 1/(sqrt(2*pi*sigmaz^2))*exp((-1/2).*(pitch-z).^2/sigmaz^2);
+Patt_dato_prec = 1/(sqrt(2*pi*4.7^2)).*exp((-1/2)*(-pitch+180).^2/4.7^2);
+     
+likelihood = Pd_dato_z.*Pd_dato_x.*Patt_dato_prec;
+
+figure
+bayes = likelihood./(sum(likelihood).*(180/343));
+plot(bayes(2,:))
+hold on
+plot(Pd_dato_x(2,:))
+hold on
+plot(Pd_dato_z(2,:))
+hold on
+zf_bayes = [];
+for i = 1:height(bayes)
+    raw = bayes(i,:);
+    [val, index] = max(raw);
+    zf_bayes = [zf_bayes index]
+end
+
+
+%[zf_bayes, sigmazf_bayes] = bayes(abs(filtered_aruco.pitch) , filtered_odom_pitch , sigma_ar(3,3), sigma_odom(3,3));
 %% PLOT RESULTS USING CLT FUSION
 frames = filtered_aruco.frame;
 clt_model = fit(frames,zf_clt,"Poly1");
