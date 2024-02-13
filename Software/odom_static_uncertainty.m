@@ -58,5 +58,5 @@ plot(MStaticX,MStaticZ,"ok")
 axis equal
 grid on
 
-% %% Save results
-% save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")
+%% Save results
+save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")
