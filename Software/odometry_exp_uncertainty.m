@@ -87,13 +87,13 @@ nbins = 20;
 % M200Z = mean(z200Measurements)
 % U200Z = std(z200Measurements)
 % ZUncertainty = [Ustatic.UStaticZ U50Z U100Z U150Z U200Z];
-%% Visualization Z
-
-figure
-plot([Ustatic.MStaticZ M50Z M100Z M150Z M200Z],ZUncertainty,"-or")
-axis equal
-grid on
-title("Uncertainty on Z measure")
+% %% Visualization Z
+% 
+% figure
+% plot([Ustatic.MStaticZ M50Z M100Z M150Z M200Z],ZUncertainty,"-or")
+% axis equal
+% grid on
+% title("Uncertainty on Z measure")
 %% X measurement processing
 
 x50Measurements = trimzeros(xMeasurments(:,1)');
@@ -142,7 +142,8 @@ plot([Ustatic.MStaticX M50X M100X M150X M200X],XUncertainty,"-or")
 axis equal
 grid on
 title("Uncertainty on X measure")
-%% Save X data
-save("../Tests/20240130/04_results/ExpXUncertainty","XUncertainty")
-%% Save Z data
+
+% %% Save X data
+% save("../Tests/20240130/04_results/ExpXUncertainty","XUncertainty")
+% %% Save Z data
 % save("../Tests/20240130/04_results/ExpZUncertainty","ZUncertainty")
