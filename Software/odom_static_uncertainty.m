@@ -8,6 +8,7 @@ direction_dir = direction_dir(~ismember({direction_dir.name}, {'.', '..'}));  % 
 
 XstaticMeasurments = zeros(1,50);
 ZstaticMeasurments = zeros(1,50);
+ThetastaticMeasurments = zeros(1,50);
 % Loop through each subdirectory
 for ndir = 1:length(direction_dir)
     currentSubdirectory = fullfile(TEST_DIR, direction_dir(ndir).name);
@@ -23,7 +24,12 @@ for ndir = 1:length(direction_dir)
 
             % Open the CSV file (you can replace this with your own processing)
             data = readtable(currentCSVFile);
-            kmax = 48;
+            if ~contains(currentSubdirectory, 'parallel')
+                kmax = 48;
+            else
+                kmax = 6;
+%                 continue
+            end
             for k = 1:kmax
                 n = (j-1)*kmax+k;
                 XstaticMeasurments(n+n*(d/50-1)) = data.x(k)-data.x(1);
@@ -52,5 +58,5 @@ plot(MStaticX,MStaticZ,"ok")
 axis equal
 grid on
 
-%% Save results
-save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")
+% %% Save results
+% save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")
