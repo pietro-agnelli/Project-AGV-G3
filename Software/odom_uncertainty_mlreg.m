@@ -40,34 +40,34 @@ for nfile = 1:length(direction_dir)
                     na = ((d/15-2)*length(csvFiles)+j-1)*kmax+k;
                 end
                 if contains(currentSubdirectory, 'ortogonal')
-                    xData(n,6) = data.frame(end);
+                    %xData(n,6) = data.frame(end);
                     xData(n,1) = abs(data.x(end-kmax+k)-data.x(k));
                     xData(n,2) = abs(data.z(end-kmax+k)-data.z(k));
-                    xData(n,3) = abs(mean(data.vx));
-                    xData(n,4) = abs(mean(data.vz));
+                    xData(n,3) = abs(mean(data.vx(60:end-60)));
+                    xData(n,4) = abs(mean(data.vz(60:end-60)));
                     xData(n,5) = abs(data.yaw(end-kmax+k)-data.yaw(k));
-                    xData(n,7) = UXexp.XUncertainty(d/50+1);
+                    xData(n,6) = UXexp.XUncertainty(d/50+1);
                 end
                 if contains(currentSubdirectory, 'parallel')
-                    zData(n,6) = data.frame(end);
+                    %zData(n,6) = data.frame(end);
                     zData(n,1) = abs(data.x(end-kmax+k)-data.x(k));
                     zData(n,2) = abs(data.z(end-kmax+k)-data.z(k));
                     zData(n,3) = abs(mean(data.vx));
                     zData(n,4) = abs(mean(data.vz));
                     zData(n,5) = abs(data.yaw(end-kmax+k)-data.yaw(k));
-                    zData(n,7) = UZexp.ZUncertainty(d/50+1);
+                    zData(n,6) = UZexp.ZUncertainty(d/50+1);
                 end
                 if contains(currentSubdirectory, 'angle')
-                    ThetaData(na,6) = data.frame(end);
+                    %ThetaData(na,6) = data.frame(end);
                     ThetaData(na,1) = abs(data.x(end-kmax+k)-data.x(k));
                     ThetaData(na,2) = abs(data.z(end-kmax+k)-data.z(k));
-                    ThetaData(na,3) = abs(mean(data.vx));
-                    ThetaData(na,4) = abs(mean(data.vz));
+                    ThetaData(na,3) = abs(mean(data.vx(60:end-60)));
+                    ThetaData(na,4) = abs(mean(data.vz(60:end-60)));
                     ThetaData(na,5) = abs(data.yaw(end-kmax+k)-data.yaw(k));
                     if d==90
-                        ThetaData(na,7) = UThetaexp.UTheta(4);
+                        ThetaData(na,6) = UThetaexp.UTheta(4);
                     else
-                        ThetaData(na,7) = UThetaexp.UTheta(d/15-1);
+                        ThetaData(na,6) = UThetaexp.UTheta(d/15-1);
                     end
                 end
             end
@@ -81,9 +81,9 @@ zData = zData(all(zData,2),:);
 ThetaData = ThetaData(all(ThetaData,2),:);
 
 %% Fitting linear regression
-xMdl = fitlm(xData(:,1:6),xData(:,7),"quadratic");
-zMdl = fitlm(zData(:,1:6),zData(:,7),"quadratic");
-thetaMdl = fitlm(ThetaData(:,1:6),ThetaData(:,7),"quadratic");
+xMdl = fitlm(xData(:,1:5),xData(:,end),"linear");
+zMdl = fitlm(zData(:,1:5),zData(:,end),"linear");
+thetaMdl = fitlm(ThetaData(:,1:5),ThetaData(:,end),"linear");
 
 hold on
 plot(xData(:,1),xData(:,end),"ob",DisplayName="Actual X uncertainty")
@@ -104,6 +104,22 @@ ylabel("Uncertainty[°]")
 legend(Location="best")
 title("Rotation uncertainty models")
 grid on
+
+%% Test error regression
+
+ds = readtable("../Tests/MARKER_100/FRAME_0.05/POSE_DATA__2023_12_15_12_28_20_FRAME_0.01_PROVA_2.csv");
+
+figure
+pred = predict(xMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
+plot(ds.x, pred)
+hold on
+pred = predict(thetaMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
+plot(abs(ds.yaw), pred)
+pred = predict(zMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
+plot(ds.z, pred)
+legend("x","theta","z")
+title("Predicted uncertainty in real scenario")
+
 %% Saving results
 
 save("../Tests/20240130/04_results/UncertaintyModels","xMdl","zMdl","thetaMdl")
