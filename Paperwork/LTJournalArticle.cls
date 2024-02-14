@@ -114,7 +114,7 @@
 	{\thesection} % Section label (e.g. number) and its formatting
 	{0.5em} % Horizontal space between the section label and title
 	{\raggedright} % Code before the section title (added \raggedright for left alignment)
-	[\vspace{-7pt}] % Code after the section title
+	[\vspace{-8pt}] % Code after the section title
 
 %------------------------------------------------
 
@@ -125,7 +125,7 @@
 	{\thesubsection} % Section label (e.g. number) and its formatting
 	{0.5em} % Horizontal space between the section label and title
 	{\raggedright} % Code before the section title
-	[\vspace{-7pt}] % Code after the section title
+	[\vspace{-8pt}] % Code after the section title
 
 %------------------------------------------------
 
@@ -151,13 +151,13 @@
 \setlength{\droptitle}{-3\baselineskip} % Move the title up
 
 \pretitle{\begin{flushleft}\fontsize{16pt}{16pt}\selectfont\bfseries} % Article title pre-formatting
-\posttitle{\end{flushleft}} % Article title post-formatting
+\posttitle{\vspace{-8pt}\end{flushleft}} % Article title post-formatting
 
-\preauthor{\begin{flushleft}\vspace{7pt}\fontsize{12pt}{12pt}\selectfont} % Author name pre-formatting
-\postauthor{\vspace{-7pt}\end{flushleft}} % Author name post-formatting
+\preauthor{\begin{flushleft}\vspace{1pt}\fontsize{12pt}{12pt}\selectfont} % Author name pre-formatting
+\postauthor{\vspace{-8pt}\end{flushleft}} % Author name post-formatting
 
 \predate{\begin{flushleft}\fontsize{9pt}{10pt}\selectfont} % Date and affiliation pre-formatting
-\postdate{\vspace{-1pt}\end{flushleft}} % Date and affiliation post-formatting
+\postdate{\vspace{-20pt}\end{flushleft}} % Date and affiliation post-formatting
 
 \patchcmd{\maketitle}{{plain}}{{fancy}}{}{} % Use the "fancy" page style for the first page
 \AtBeginDocument{\thispagestyle{fancy}} % Apply the "fancy" page style to the first page
@@ -206,7 +206,7 @@
 
 \usepackage{caption} % Required for customizing captions
 
-\captionsetup{skip=6pt} % Vertical whitespace between figures/tables and the caption (default is 10pt)
+\captionsetup{skip=2pt} % Vertical whitespace between figures/tables and the caption (default is 10pt)
 \captionsetup{labelfont={bf,small}, textfont={it,small}} % Define caption font style
 
 %----------------------------------------------------------------------------------------
