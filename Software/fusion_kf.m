@@ -5,7 +5,7 @@ z = table2array(ds);
 load("../Tests/20240130/04_results/ExpXUncertainty.mat")
 load("../Tests/20240130/04_results/ExpZUncertainty.mat")
 load("../Tests/20240130/04_results/ExpThetaUncertainty.mat")
-load("../Tests/20240130/04_results/UncertaintyModels.mat")
+load("../Tests/20240130/04_results/CrossUncertaintyModels.mat")
 %% Visualization
 % figure
 % plot(ds.x,ds.z,'o')
@@ -54,7 +54,7 @@ G = [0 0;
 P = I;
 
 % process noise
-sigma = 0.00009;
+sigma = 15;
 % Q = sigma*(G*G');
 % Q = cov([ds.x,ds.z,ds.yaw]);
 Q = sigma^2*I;
@@ -63,19 +63,19 @@ Q = sigma^2*I;
 % Il vettore di stato è completamente osservabile
 H = I;
 % uncomment to use fixed disturbance
-R = diag([min(XUncertainty),...
-        min(ZUncertainty),...
-        min(UTheta)]).^2;
+% R = diag([min(XUncertainty),...
+%         min(ZUncertainty),...
+%         min(UTheta)]).^2;
 F = I;
 for n=2:height(z)
 
-%     F = [1 0 sin(ds.yaw(n-1));
-%          0 1 cos(ds.yaw(n-1));
-%          0 0 1];
+    F = [1 0 cos(ds.yaw(n-1));
+         0 1 sin(ds.yaw(n-1));
+         0 0 1];
 
-%     R = diag([predict(xMdl,[ds.x(n-1),ds.z(n-1),ds.vx(n-1),ds.vz(n-1),ds.yaw(n-1)]),...
-%         predict(zMdl,[ds.x(n-1),ds.z(n-1),ds.vx(n-1),ds.vz(n-1),ds.yaw(n-1)]),...
-%         predict(thetaMdl,[ds.x(n-1),ds.z(n-1),ds.vx(n-1),ds.vz(n-1),ds.yaw(n-1)])]).^2;
+    R = diag([predict(xMdl,[ds.x(n-1),ds.z(n-1),abs(mean(ds.vx(1:n-1))),abs(mean(ds.vz(1:n-1))),ds.yaw(n-1)]),...
+        predict(CrossZMdl,[ds.x(n-1),ds.z(n-1),abs(mean(ds.vx(1:n-1))),abs(mean(ds.vz(1:n-1))),ds.yaw(n-1)]),...
+        predict(CrossThetaMdl,[ds.x(n-1),ds.z(n-1),abs(mean(ds.vx(1:n-1))),abs(mean(ds.vz(1:n-1))),ds.yaw(n-1)])]).^2;
     
     % Predict
     x(:,n) = F*x(:,n-1) + G*u(:,n-1);
@@ -97,7 +97,7 @@ legend('Theorical','Kalman','Measurements')
 xlabel('X [m]')
 ylabel('Y [m]')
 axis equal
-title('Traiettoria XZ')
+title('Trajectory XZ')
 grid on
 
 figure

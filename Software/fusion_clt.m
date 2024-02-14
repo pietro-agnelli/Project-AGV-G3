@@ -5,7 +5,7 @@ arucoData = readtable("../Tests/MARKER_100/FRAME_0.05/POSE_DATA___ARUCO_2023_12_
 load("../Tests/20240130/04_results/ExpXUncertainty.mat")
 load("../Tests/20240130/04_results/ExpZUncertainty.mat")
 load("../Tests/20240130/04_results/ExpThetaUncertainty.mat")
-load("../Tests/20240130/04_results/UncertaintyModels.mat")
+load("../Tests/20240130/04_results/CrossUncertaintyModels.mat")
 load("../Tests/20231201/04_results/Uaruco.csv")
 %% Data preprocessing
 % removing false positives
@@ -23,12 +23,12 @@ odomData = odomData(idx,:);
 %% Applying CLT
 UXAruco = Uaruco(1,1)/1000;  
 UZAruco = Uaruco(2,2)/1000;
-fusedPos = zeros(height(odomData),5);
-
-for n = 1:min(height(odomData),height(arucoData))
+fusedPos = zeros(height(odomData)/2,5);
+lastFusedNode = 1;
+for n = 1:min(height(odomData),height(arucoData))/2
     % setting current uncertainties
-    UXOdom = abs(predict(xMdl,[odomData.x(n),odomData.z(n),odomData.vx(n),odomData.vz(n),odomData.yaw(n)]));
-    UZOdom = abs(predict(zMdl,[odomData.x(n),odomData.z(n),odomData.vx(n),odomData.vz(n),odomData.yaw(n)]));
+    UXOdom = abs(predict(xMdl,[odomData.x(n)-odomData.x(lastFusedNode),odomData.z(n)-odomData.z(lastFusedNode),abs(mean(odomData.vx(1:n))),abs(mean(odomData.vz(1:n))),odomData.yaw(n)]));
+    UZOdom = abs(predict(CrossZMdl,[odomData.x(n)-odomData.x(lastFusedNode),odomData.z(n)-odomData.z(lastFusedNode),abs(mean(odomData.vx(1:n))),abs(mean(odomData.vz(1:n))),odomData.yaw(n)]));
 %     UXOdom = max(XUncertainty)
 %     UZOdom = max(ZUncertainty)
     % offsetting aruco data assuming 6 uniformly spaced markers
@@ -46,9 +46,10 @@ for n = 1:min(height(odomData),height(arucoData))
             1/sqrt(arucoXW^(-2)+odomXW^(-2)),...
             1/sqrt(arucoZW^(-2)+odomZW^(-2)),...
             1];
+        lastFusedNode = n;
     else
-        dx = odomData.x(n)-odomData.x(n-1);
-        dz = odomData.z(n)-odomData.z(n-1);
+        dx = (odomData.x(n)-odomData.x(n-1));%*cos(odomData.yaw(n-1)*pi/180);
+        dz = (odomData.z(n)-odomData.z(n-1));%*sin(odomData.yaw(n-1)*pi/180);
         fusedPos(n,:) = [fusedPos(n-1,1:2)+[dx,dz], UXOdom, UZOdom, 0];
     end
 end
@@ -56,20 +57,31 @@ end
 %% Visualization
 figure
 hold on
-plot(odomData.x, odomData.z,'.r',DisplayName='Odometry')
-plot(arucoData.x, arucoData.z, '.b',DisplayName='Aruco')
-plot(fusedPos(:,1), fusedPos(:,2),'-g',DisplayName='Clt')
+plot(odomData.x(1:end/2), odomData.z(1:end/2),'.r',DisplayName='Odometry')
+plot(arucoData.x(1:end/2), arucoData.z(1:end/2), '.b',DisplayName='Aruco')
+plot(fusedPos(:,1), fusedPos(:,2),'.-g',DisplayName='Clt')
 axis equal
+title('XZ trajectory')
 legend
 grid on
 
 %% Cov ellipses
-
 figure
 hold on
-for n = 1:50:length(fusedPos)/2
-    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)])
-    plot(fusedPos(n,1),fusedPos(n,2),'.',Displayname=string(n))
-end
+grid on
 axis equal
-legend
+title('Fused trajectory')
+plot(fusedPos(139:349,1), fusedPos(139:349,2),'.-b',DisplayName='Clt')
+
+for n = 139:10:187
+    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],'style','--g')
+end
+for n = 188:10:259
+    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],'style','--r')
+end
+for n = 260:10:301
+    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],'style','--g')
+end
+for n = 302:10:349
+    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],'style','--r')
+end
