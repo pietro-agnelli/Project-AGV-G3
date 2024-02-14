@@ -41,7 +41,7 @@ sigma_ar = readmatrix("../Tests/20231201/04_results/Uaruco.csv");
 sigma_odom = readmatrix("../Tests/20231201/04_results/Uodometry.csv");
 sigmaz = [sigma_ar(3,3)*ones(height(filtered_aruco),1), uncertainty_prop(sigma_odom(3,3),height(filtered_odom_pitch))'];
 %% CLT FUSION
-%[zf_clt, sigmazf_clt] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigmaz);
+[zf_clt, sigmazf_clt] = clt([abs(filtered_aruco.pitch),filtered_odom_pitch], sigmaz);
 %%  BAYES FUSION
 close all
 x = abs(filtered_aruco.pitch);
