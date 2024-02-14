@@ -1,5 +1,6 @@
 %% Load saved data
 ds = readtable("../Tests/MARKER_100/FRAME_0.05/POSE_DATA__2023_12_15_12_28_20_FRAME_0.01_PROVA_2.csv");
+ds = ds(1:800,:);
 z = table2array(ds);
 
 load("../Tests/20240130/04_results/ExpXUncertainty.mat")
@@ -21,13 +22,13 @@ dt = 1/12; % timestep for 12fps
 % state vector initialization:
 % our state vector is x = [x; z; theta]
 % our state trasition matrix is
-% F = [1 0 sin(theta);
+% F = [1 0 cos(theta);
 %      0 1 cos(theta);
 %      0 0 1];
 nofstates = 3;
 
 % Condizioni iniziali
-x = zeros(nofstates,length(ds.x));
+x = zeros(nofstates,height(ds));
 k = zeros(length(ds.x),1);
 
 x(:,1) = [ds.x(1);
@@ -43,8 +44,8 @@ I = eye(height(x));
 u = [ds.vx';
      ds.vz'];
 
-G = [0 0;
-     0  0;
+G = [1 0;
+     0  1;
      0  0 ];
 
 % the system is x(n) = F*x(n-1) + G*u
@@ -54,10 +55,10 @@ G = [0 0;
 P = I;
 
 % process noise
-sigma = 15;
-% Q = sigma*(G*G');
+sigma = 0.005;
+Q = sigma*(G*G');
 % Q = cov([ds.x,ds.z,ds.yaw]);
-Q = sigma^2*I;
+% Q = sigma^2*I;
 
 %% Measurements equation
 % Il vettore di stato è completamente osservabile
@@ -69,8 +70,8 @@ H = I;
 F = I;
 for n=2:height(z)
 
-    F = [1 0 cos(ds.yaw(n-1));
-         0 1 sin(ds.yaw(n-1));
+    F = [1 0 cos(ds.yaw(n-1)*pi/180);
+         0 1 cos(ds.yaw(n-1)*pi/180);
          0 0 1];
 
     R = diag([predict(xMdl,[ds.x(n-1),ds.z(n-1),abs(mean(ds.vx(1:n-1))),abs(mean(ds.vz(1:n-1))),ds.yaw(n-1)]),...
@@ -92,7 +93,7 @@ figure
 hold on
 plot(ds.x,ds.z(1)*ones(length(ds.x),1),'--k')
 plot(x(1,:),x(2,:),'r')
-plot(ds.x,ds.z,'.b')
+plot(ds.x,ds.z,'.b',MarkerSize=.8)
 legend('Theorical','Kalman','Measurements')
 xlabel('X [m]')
 ylabel('Y [m]')

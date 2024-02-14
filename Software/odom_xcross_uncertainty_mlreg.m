@@ -80,21 +80,21 @@ CrossThetaMdl = fitlm(ThetaData(:,1:5),ThetaData(:,end),"linear", RobustOpts="bi
 
 hold on
 plot(xData(:,1),xData(:,end),"ob",DisplayName="Actual X uncertainty")
-plot(zData(:,2),zData(:,end),"om",DisplayName="Actual Z uncertainty")
+plot(xData(:,1),zData(:,end),"om",DisplayName="Actual Z uncertainty")
 plot(xData(:,1),xMdl.Fitted,".c",DisplayName="Predicted X uncertainty")
-plot(zData(:,2),CrossZMdl.Fitted,".r",DisplayName="Predicted Z uncertainty")
-legend(Location="best")
-xlabel("Distance[m]")
+plot(xData(:,1),CrossZMdl.Fitted,".r",DisplayName="Predicted Z uncertainty")
+legend(Location="northwest")
+xlabel("x distance[m]")
 ylabel("Uncertainty[m]")
 grid on
 title("Translation uncertainty models")
 figure
 hold on
-plot(ThetaData(:,5),ThetaData(:,end),"om",DisplayName="Actual Theta uncertainty")
-plot(ThetaData(:,5),CrossThetaMdl.Fitted,".r",DisplayName="Predicted Theta uncertainty")
-xlabel("Angle[°]")
+plot(xData(:,1),ThetaData(:,end),"om",DisplayName="Actual Theta uncertainty")
+plot(xData(:,1),CrossThetaMdl.Fitted,".r",DisplayName="Predicted Theta uncertainty")
+xlabel("x distance[m]")
 ylabel("Uncertainty[°]")
-legend(Location="best")
+legend(Location="northwest")
 title("Rotation uncertainty models")
 grid on
 
@@ -103,16 +103,25 @@ grid on
 ds = readtable("../Tests/MARKER_100/FRAME_0.05/POSE_DATA__2023_12_15_12_28_20_FRAME_0.01_PROVA_2.csv");
 
 figure
-pred = predict(xMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
-plot(ds.x, pred)
 hold on
-pred = predict(CrossThetaMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
-plot(abs(ds.yaw), pred)
+
+pred = predict(xMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
+plot(ds.x, pred, '.-c', DisplayName='Predicted x uncertainty')
 pred = predict(CrossZMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
-plot(ds.z, pred)
-legend("x","theta","z")
+plot(ds.x, pred, '.-m', DisplayName='Predicted z uncertainty')
+legend(Location="northwest")
 title("Predicted uncertainty in real scenario")
-
-%% Saving results
-
-save("../Tests/20240130/04_results/CrossUncertaintyModels","xMdl","CrossZMdl","CrossThetaMdl")
+grid on
+xlabel('x distance [m]')
+ylabel('Uncertainty [m]')
+figure
+pred = predict(CrossThetaMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
+plot(ds.x, pred, '.-g', DisplayName='Predicted theta uncertainty')
+legend(Location="northwest")
+title("Predicted uncertainty in real scenario")
+grid on
+xlabel('x distance [m]')
+ylabel('Uncertainty [°]')
+% %% Saving results
+% 
+% save("../Tests/20240130/04_results/CrossUncertaintyModels","xMdl","CrossZMdl","CrossThetaMdl")

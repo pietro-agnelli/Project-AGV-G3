@@ -51,7 +51,7 @@ end
 nbins = 20;
 
 %% Z measurement elaboration
-
+% to calculate uncertainty on x measure due to z
 z50Measurements = trimzeros(zMeasurments(:,1)');
 z100Measurements = trimzeros(zMeasurments(:,2)');
 z150Measurements = trimzeros(zMeasurments(:,3)');
@@ -75,7 +75,7 @@ M150Z = mean(z150Measurements)
 U150Z = std(z150Measurements)
 M200Z = mean(z200Measurements)
 U200Z = std(z200Measurements)
-ZUncertainty = [Ustatic.UStaticZ U50Z U100Z U150Z U200Z];
+ZUncertainty = [Ustatic.UStaticX U50Z U100Z U150Z U200Z];
 
 UTHETA50Z = mean(thetaz50Measurements)
 MTHETA50Z = std(thetaz50Measurements)
@@ -119,7 +119,7 @@ M150X = mean(x150Measurements)
 U150X = std(x150Measurements)
 M200X = mean(x200Measurements)
 U200X = std(x200Measurements)
-XUncertainty = [Ustatic.UStaticX U50X U100X U150X U200X];
+XUncertainty = [Ustatic.UStaticZ U50X U100X U150X U200X];
 
 UTHETA50X = mean(thetax50Measurements)
 MTHETA50X = std(thetax50Measurements)
@@ -134,19 +134,21 @@ ThetaXUncertainty = [Ustatic.UStaticTheta UTHETA50X UTHETA100X UTHETA150X UTHETA
 %% Visualization X
 
 figure
-plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],XUncertainty,"-or")
-%axis equal
+plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],XUncertainty,".-r")
+axis equal
 grid on
-title("Uncertainty on X measure")
-
+title("Uncertainty on Z")
+xlabel("x distance [m]")
+ylabel("z uncertainty [m]")
 %% Visualization THETA on X
 
 figure
-plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],ThetaXUncertainty,"-or")
+plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],ThetaXUncertainty,".-r")
 %axis equal
 grid on
 title("Uncertainty on Theta measure (X)")
-
+xlabel("x distance [m]")
+ylabel("theta uncertainty [°]")
 %% Visualization THETA on Z
 
 figure
@@ -156,6 +158,8 @@ grid on
 title("Uncertainty on Theta measure (Z)")
 
 % %% Save X data
+% % incertezze dovute alla traslazione lungo x
 % save("../Tests/20240130/04_results/CrossXUncertainty","XUncertainty","ThetaXUncertainty")
 % %% Save Z data
+% % incertezze dovute alla traslazione lungo z
 % save("../Tests/20240130/04_results/CrossZUncertainty","ZUncertainty", "ThetaZUncertainty")
