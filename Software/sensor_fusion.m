@@ -92,14 +92,14 @@ title("CLT Fusion")
 legend
 %% PLOT RESULTS USING BAYES FUSION
 figure
-plot(zf_bayes,'*r',DisplayName="FusedData")
+plot(frames, zf_bayes,'*r',DisplayName="FusedData")
 hold on
 axis equal
-plot(abs(filtered_aruco.pitch),'ob',DisplayName="ArucoData")
-plot(filtered_odom_pitch,'+k',DisplayName="OdometryData")
+plot(frames,abs(filtered_aruco.pitch),'ob',DisplayName="ArucoData")
+plot(frames,filtered_odom_pitch,'+k',DisplayName="OdometryData")
 title("BAYES Fusion")
 legend
-%% uncertainly propagation test
-%sigma2_0 = [sigma2_x0 sigma2_v0 sigma2_a0; sigma2_the0 sigma2_w0 sigma2_alpha0 ]
-sigma2_0 = [sigma]
-sigmax = uncertainty_prop_v2(sigma2_0 ,height(filtered_odom_pitch))
+% %% uncertainly propagation test
+% %sigma2_0 = [sigma2_x0 sigma2_v0 sigma2_a0; sigma2_the0 sigma2_w0 sigma2_alpha0 ]
+% sigma2_0 = [sigma]
+% sigmax = uncertainty_prop_v2(sigma2_0 ,height(filtered_odom_pitch))
