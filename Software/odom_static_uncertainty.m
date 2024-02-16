@@ -54,9 +54,13 @@ figure
 plot(XstaticMeasurments,ZstaticMeasurments,'xr')
 hold on
 error_ellipse(cov(XstaticMeasurments,ZstaticMeasurments), [MStaticX MStaticZ],'conf',0.95,'style','b')
-plot(MStaticX,MStaticZ,"ok")
+plot(MStaticX,MStaticZ,"ok","MarkerFaceColor","k")
+legend("positions","error ellipse","mean value")
 axis equal
 grid on
+xlabel("x [m]")
+ylabel("z [m]")
+title("Static position")
 
-%% Save results
-save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")
+% %% Save results
+% save("../Tests/20240130/04_results/staticUncertainty","MStaticX","UStaticX","UStaticZ","MStaticZ","MStaticTheta","UStaticTheta")

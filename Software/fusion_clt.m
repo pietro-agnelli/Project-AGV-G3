@@ -26,9 +26,10 @@ figure
 l = legend;
 hold on
 grid on
-axis equal
-xlabel("x [m]")
-ylabel("z [m]")
+% axis equal
+xlabel("x [m]",FontSize=14)
+ylabel("z [m]",FontSize=14)
+ylim([-2,2])
 title('XZ trajectory')
 %% Applying CLT
 UXAruco = Uaruco(1,1)/1000;  
@@ -58,7 +59,7 @@ for n = 1:min(height(odomData),height(arucoData))/2
             1];
         lastFusedNode = n;
         % plotting connectors between fusion terms
-        plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'-k',DisplayName='Fusion terms connections')
+        % plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'--k',DisplayName='Fusion terms connections', LineWidth=.3)
         l.AutoUpdate = 'off';
     else
         dx = (odomData.x(n)-odomData.x(n-1));%*cos(odomData.yaw(n-1)*pi/180);
@@ -71,7 +72,7 @@ end
 l.AutoUpdate = 'on';
 plot(odomData.x(1:end/2), odomData.z(1:end/2),'.r',DisplayName='Odometry')
 plot(arucoData.x(1:end/2), arucoData.z(1:end/2), '.b',DisplayName='Aruco')
-plot(fusedPos(:,1), fusedPos(:,2),'.-g',DisplayName='Clt')
+plot(fusedPos(:,1), fusedPos(:,2),'-g',DisplayName='Clt')
 
 %% Uncertainty
 cltzstd = sqrt(sum((odomData.z(1)-fusedPos(:,2)).^2)/(length(fusedPos(:,2))-1))
@@ -80,17 +81,17 @@ Odomzstd = sqrt(sum((odomData.z(1)-odomData.z(1:end/2)).^2)/(length(odomData.x(1
 %% Uncertainty visualization
 figure
 subplot(2,1,1)
-plot(fusedPos(:,1),fusedPos(:,3), '.-g',DisplayName='Clt')
+plot(fusedPos(:,1),fusedPos(:,3), '.-g',DisplayName='Clt', LineWidth=0.8)
 title("X uncertainty")
-xlabel("x [m]")
-ylabel("uncertainty [m]")
+xlabel("x [m]",FontSize=14)
+ylabel("uncertainty [m]",FontSize=14)
 grid on
 
 subplot(2,1,2)
 plot(fusedPos(:,1),fusedPos(:,4), '.-g',DisplayName='Clt')
 title("Z uncertainty")
-xlabel("z [m]")
-ylabel("uncertainty [m]")
+xlabel("z [m]",FontSize=14)
+ylabel("uncertainty [m]",FontSize=14)
 grid on
 %% Cov ellipses
 figure
@@ -98,7 +99,7 @@ hold on
 grid on
 axis equal
 l = legend;
-title('Fused trajectory')
+title('Fused trajectory with covariance ellipses')
 plot(fusedPos(188:349,1), fusedPos(188:349,2),'.-g',DisplayName='Clt')
 plot(arucoData.x(188:349),arucoData.z(188:349),'.b',DisplayName='Aruco')
 plot(odomData.x(188:349),odomData.z(188:349),'.r',DisplayName='Odometry')
@@ -106,17 +107,21 @@ l.AutoUpdate = 'off';
 % for n = 139:10:187
 %     error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','--g')
 % end
+l.AutoUpdate = 'on';
 for n = 188:10:262
     error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','-.m')
+    l.AutoUpdate = 'off';
 end
+l.AutoUpdate = 'on';
 for n = 263:10:289
     error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','-.k')
+    l.AutoUpdate = 'off';
 end
 for n = 290:10:349
     error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','-.m')
 end
 
-xlabel("x [m]")
-ylabel("z [m]")
+xlabel("x [m]",FontSize=14)
+ylabel("z [m]",FontSize=14)
 %%
 max(fusedPos(:,3))

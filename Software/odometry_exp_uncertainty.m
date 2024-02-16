@@ -138,11 +138,13 @@ XUncertainty = [Ustatic.UStaticX U50X U100X U150X U200X];
 %% Visualization X
 
 figure
-plot([Ustatic.MStaticX M50X M100X M150X M200X],XUncertainty,"-or")
-axis equal
+plot([Ustatic.MStaticX M50X M100X M150X M200X],XUncertainty,".-r",MarkerSize=15)
+% axis equal
 grid on
 title("Uncertainty on X measure")
-
+xlabel("x [m]",FontSize=14)
+ylabel("uncertainty [m]",FontSize=14)
+ylim([0,0.09])
 % %% Save X data
 % save("../Tests/20240130/04_results/ExpXUncertainty","XUncertainty")
 % %% Save Z data

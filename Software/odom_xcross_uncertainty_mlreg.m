@@ -81,11 +81,11 @@ CrossThetaMdl = fitlm(ThetaData(:,1:5),ThetaData(:,end),"linear", RobustOpts="bi
 hold on
 plot(xData(:,1),xData(:,end),"ob",DisplayName="Actual X uncertainty")
 plot(xData(:,1),zData(:,end),"om",DisplayName="Actual Z uncertainty")
-plot(xData(:,1),xMdl.Fitted,".c",DisplayName="Predicted X uncertainty")
-plot(xData(:,1),CrossZMdl.Fitted,".r",DisplayName="Predicted Z uncertainty")
+plot(xData(:,1),xMdl.Fitted,".c",DisplayName="Predicted X uncertainty",MarkerSize=9)
+plot(xData(:,1),CrossZMdl.Fitted,".g",DisplayName="Predicted Z uncertainty",MarkerSize=9)
 legend(Location="northwest")
-xlabel("x distance[m]")
-ylabel("Uncertainty[m]")
+xlabel("x distance[m]",FontSize=14)
+ylabel("Uncertainty[m]",FontSize=14)
 grid on
 title("Translation uncertainty models")
 figure
@@ -112,8 +112,8 @@ plot(ds.x, pred, '.-m', DisplayName='Predicted z uncertainty')
 legend(Location="northwest")
 title("Predicted uncertainty in real scenario")
 grid on
-xlabel('x distance [m]')
-ylabel('Uncertainty [m]')
+xlabel('x distance [m]',FontSize=14)
+ylabel('Uncertainty [m]',FontSize=14)
 figure
 pred = predict(CrossThetaMdl,[ds.x,ds.z,ds.vx,ds.vz,ds.yaw]);
 plot(ds.x, pred, '.-g', DisplayName='Predicted theta uncertainty')
@@ -125,3 +125,7 @@ ylabel('Uncertainty [°]')
 % %% Saving results
 % 
 % save("../Tests/20240130/04_results/CrossUncertaintyModels","xMdl","CrossZMdl","CrossThetaMdl")
+%%
+norm(xMdl.Residuals{:,1})/norm(xData,2)
+norm(CrossZMdl.Residuals{:,1})/norm(zData,2)
+norm(CrossThetaMdl.Residuals{:,1})/norm(ThetaData,2)

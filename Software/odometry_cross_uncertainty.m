@@ -134,21 +134,22 @@ ThetaXUncertainty = [Ustatic.UStaticTheta UTHETA50X UTHETA100X UTHETA150X UTHETA
 %% Visualization X
 
 figure
-plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],XUncertainty,".-r")
-axis equal
+plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],XUncertainty,".-r",MarkerSize=10)
+% axis equal
 grid on
-title("Uncertainty on Z")
-xlabel("x distance [m]")
-ylabel("z uncertainty [m]")
+title("Uncertainty on Z measure")
+xlabel("x distance [m]",FontSize=14)
+ylabel("z uncertainty [m]",FontSize=14)
+ylim([0,0.09])
 %% Visualization THETA on X
 
 figure
-plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],ThetaXUncertainty,".-r")
+plot([Ustatic.MStaticX 0.50 1.00 1.50 2.00],ThetaXUncertainty,".-r",MarkerSize=10)
 %axis equal
 grid on
 title("Uncertainty on Theta measure (X)")
-xlabel("x distance [m]")
-ylabel("theta uncertainty [°]")
+xlabel("x distance [m]",FontSize=14)
+ylabel("theta uncertainty [°]",FontSize=14)
 %% Visualization THETA on Z
 
 figure

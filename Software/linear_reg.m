@@ -53,7 +53,8 @@ axis equal
 grid on
 xlabel("x[mm]")
 ylabel("z[mm]")
-title("Translation along X")
+title("Translation on X")
+ylim([-500,1500])
 %% 
 % Plot x as a function of z (translation along z axis)
 % figure("Name","ZX")
@@ -62,11 +63,12 @@ subplot(2,3,2,"replace")
 plot(xz_model,xz_dataset.z,xz_dataset.x)
 hold on
 % plot(xz_dataset.z,xz_dataset.x,'*b',MarkerSize=4,DisplayName='Data points')
-title("Translation along Z")
+title("Translation on Z")
 axis equal
 grid on
 xlabel("z[mm]")
 ylabel("x[mm]")
+ylim([-800,1500])
 %%
 % Plot pitch as a function of z (moving along z axis) for different theta
 % figure("Name","THETA_0")
@@ -80,6 +82,7 @@ title("Translation @0°")
 grid on
 xlabel("z[mm]")
 ylabel("theta[°]")
+ylim([0,200])
 %% 
 % figure("Name","THETA_30")
 subplot(2,3,4,"replace")
@@ -92,6 +95,7 @@ title("Translation @30°")
 grid on
 xlabel("z[mm]")
 ylabel("theta[°]")
+ylim([50,200])
 %% 
 % figure("Name","THETA_45")
 subplot(2,3,5,"replace")
@@ -104,6 +108,7 @@ title("Translation @45°")
 grid on
 xlabel("z[mm]")
 ylabel("theta[°]")
+ylim([50,200])
 %% 
 % figure("Name","THETA_60")
 subplot(2,3,6,"replace[°]")
@@ -116,7 +121,7 @@ title("Translation @60°")
 grid on
 xlabel("z[mm]")
 ylabel("theta[°]")
-
+ylim([50,200])
 %% UNCERTAINTY ASESSMENT
 
 sigma_zx = sqrt(gof_zx.sse/(height(zx_dataset)-out_zx.numparam))

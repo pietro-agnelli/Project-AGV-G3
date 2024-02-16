@@ -13,7 +13,7 @@
 dt = 1/12;
 
 % reading data from file
-data = readtable('..\Tests\20240130\02_preprocessing\ortogonal\200\POSE_DATA__2023_03_02_14_08_12.csv');
+data = readtable('..\Tests\20240130\02_preprocessing\ortogonal\200\POSE_DATA__2023_03_02_14_05_46.csv');
 theta = data.yaw.*pi./180;
 v = data.vx;
 
@@ -40,6 +40,10 @@ for n = 2:height(data)
     ((a*0.5*dt^2)*sin(theta(n-1))*utheta(n-1))^2);
 end
 
-plot(ux)
+plot(data.x(1)-data.x,ux,'.-r',MarkerSize=8,LineWidth=0.7)
+xlabel("Distance x [m]",FontSize=14)
+ylabel("Uncertainty [m]",FontSize=14)
+grid on
+title("Uncertatinty propagation")
+axis equal
 hold on
-% plot([0 n_frames],sqrt(sigma2x),'o')
