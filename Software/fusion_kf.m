@@ -44,9 +44,9 @@ I = eye(height(x));
 u = [ds.vx';
      ds.vz'];
 
-G = [1 0;
-     0  1;
-     0  0 ];
+G = [dt 0;
+     0  dt;
+     0  0];
 
 % the system is x(n) = F*x(n-1) + G*u
 
@@ -55,7 +55,7 @@ G = [1 0;
 P = I;
 
 % process noise
-sigma = 0.005;
+sigma = 0.17;
 Q = sigma*(G*G');
 % Q = cov([ds.x,ds.z,ds.yaw]);
 % Q = sigma^2*I;
@@ -70,8 +70,8 @@ H = I;
 F = I;
 for n=2:height(z)
 
-    F = [1 0 cos(ds.yaw(n-1)*pi/180);
-         0 1 cos(ds.yaw(n-1)*pi/180);
+    F = [1 0 0;
+         0 1 0;
          0 0 1];
 
     R = diag([predict(xMdl,[ds.x(n-1),ds.z(n-1),abs(mean(ds.vx(1:n-1))),abs(mean(ds.vz(1:n-1))),ds.yaw(n-1)]),...
@@ -107,5 +107,5 @@ plot(k);
 title("Kalman gain")
 
 %% Evaluation
-measSSE = sum((ds.z(1)*ones(length(ds.x),1)-ds.z).^2)
-kalmanSSE = sum((ds.z(1)*ones(length(ds.x),1)-x(2,:)').^2)
+kfzstd = sqrt(sum((ds.z(1)-x(2,:)).^2)/(length(x(2,:))-1))
+Odomzstd = sqrt(sum((ds.z(1)-ds.z(1:end)).^2)/(length(ds.z(1:end))-1))

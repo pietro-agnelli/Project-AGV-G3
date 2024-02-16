@@ -73,6 +73,10 @@ plot(odomData.x(1:end/2), odomData.z(1:end/2),'.r',DisplayName='Odometry')
 plot(arucoData.x(1:end/2), arucoData.z(1:end/2), '.b',DisplayName='Aruco')
 plot(fusedPos(:,1), fusedPos(:,2),'.-g',DisplayName='Clt')
 
+%% Uncertainty
+cltzstd = sqrt(sum((odomData.z(1)-fusedPos(:,2)).^2)/(length(fusedPos(:,2))-1))
+Odomzstd = sqrt(sum((odomData.z(1)-odomData.z(1:end/2)).^2)/(length(odomData.x(1:end/2))-1))
+
 %% Uncertainty visualization
 figure
 subplot(2,1,1)
