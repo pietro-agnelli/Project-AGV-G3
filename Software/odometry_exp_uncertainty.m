@@ -146,6 +146,6 @@ xlabel("x [m]",FontSize=14)
 ylabel("uncertainty [m]",FontSize=14)
 ylim([0,0.09])
 % %% Save X data
-% save("../Tests/20240130/04_results/ExpXUncertainty","XUncertainty")
+ save("../Tests/20240130/04_results/ExpXUncertainty","XUncertainty")
 % %% Save Z data
-% save("../Tests/20240130/04_results/ExpZUncertainty","ZUncertainty")
+ save("../Tests/20240130/04_results/ExpZUncertainty","ZUncertainty")

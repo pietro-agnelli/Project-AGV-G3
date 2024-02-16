@@ -160,7 +160,7 @@ title("Uncertainty on Theta measure (Z)")
 
 % %% Save X data
 % % incertezze dovute alla traslazione lungo x
-% save("../Tests/20240130/04_results/CrossXUncertainty","XUncertainty","ThetaXUncertainty")
+ save("../Tests/20240130/04_results/CrossXUncertainty","XUncertainty","ThetaXUncertainty")
 % %% Save Z data
 % % incertezze dovute alla traslazione lungo z
-% save("../Tests/20240130/04_results/CrossZUncertainty","ZUncertainty", "ThetaZUncertainty")
+ save("../Tests/20240130/04_results/CrossZUncertainty","ZUncertainty", "ThetaZUncertainty")
