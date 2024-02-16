@@ -124,4 +124,4 @@ xlabel('x distance [m]')
 ylabel('Uncertainty [°]')
 % %% Saving results
 % 
-% save("../Tests/20240130/04_results/CrossUncertaintyModels","xMdl","CrossZMdl","CrossThetaMdl")
+save("../Tests/20240130/04_results/CrossUncertaintyModels","xMdl","CrossZMdl","CrossThetaMdl")

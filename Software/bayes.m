@@ -41,5 +41,4 @@ for i = 1:height(bayes)
 end
 
 
-%[zf_bayes, sigmazf_bayes] = bayes(abs(filtered_aruco.pitch) , filtered_odom_pitch , sigma_ar(3,3), sigma_odom(3,3));
 end
