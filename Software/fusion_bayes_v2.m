@@ -31,57 +31,85 @@ xlabel("x [m]",FontSize=14)
 ylabel("z [m]",FontSize=14)
 ylim([-2,2])
 title('XZ trajectory')
-%% Applying CLT
-UXAruco = Uaruco(1,1)/1000;  
+%% Applying Bayes
+UXAruco = Uaruco(1,1)/1000;
 UZAruco = Uaruco(2,2)/1000;
 fusedPos = zeros(height(odomData)/2,5);
 lastFusedNode = 1;
-for n = 1:min(height(odomData),height(arucoData))/2
+
+dt = 1/12;
+delta = 0.01;
+eval = -1:delta:50;
+%%
+for n = 2:min(height(odomData),height(arucoData))/2%se aruco viene rilevato faccio sensor fusion
     % setting current uncertainties
     UXOdom = abs(predict(xMdl,[odomData.x(n)-odomData.x(lastFusedNode),odomData.z(n)-odomData.z(lastFusedNode),abs(mean(odomData.vx(1:n))),abs(mean(odomData.vz(1:n))),odomData.yaw(n)]));
     UZOdom = abs(predict(CrossZMdl,[odomData.x(n)-odomData.x(lastFusedNode),odomData.z(n)-odomData.z(lastFusedNode),abs(mean(odomData.vx(1:n))),abs(mean(odomData.vz(1:n))),odomData.yaw(n)]));
-%     UXOdom = max(XUncertainty)
-%     UZOdom = max(ZUncertainty)
+%         UXOdom = max(XUncertainty)
+%         UZOdom = max(ZUncertainty)
     % offsetting aruco data assuming 6 uniformly spaced markers
     ds = abs(min(odomData.x)-max(odomData.x))/6;
     arucoData.x(n) = -arucoData.x(n) + ds * arucoData.id_marker(n) + arucoData.x(1);
-    if and(arucoData.y(n) ~= 0, ~isnan(arucoData.y(n)))
-        % calculate weights
-        arucoXW = (UXAruco^(-2))/(UXAruco^(-2)+UXOdom^(-2));
-        odomXW = (UXOdom^(-2))/(UXAruco^(-2)+UXOdom^(-2));
-        arucoZW = (UZAruco^(-2))/(UZAruco^(-2)+UZOdom^(-2));
-        odomZW = (UZOdom^(-2))/(UZAruco^(-2)+UZOdom^(-2));
+    if arucoData.x(n) ~= 0 && ~isnan(arucoData.x(n)) && arucoData.z(n) ~= 0 && ~isnan(arucoData.z(n)) &&...
+            arucoData.x(n-1) ~= 0 && ~isnan(arucoData.x(n-1)) &&arucoData.z(n-1) ~= 0 && ~isnan(arucoData.z(n-1))
+        %% BAYES
+        priorX = odomData.x(n-1) + odomData.vx(n-1)*dt;
+        priorDistX = normpdf(eval, priorX, 0.7);
+        priorDistZ = normpdf(eval, 0, std(odomData.z(1:n)));
+        % aruco
+        arucoDistX = normpdf(eval, arucoData.x(n), UXAruco);
+        arucoDistZ = normpdf(eval, arucoData.z(n), UZAruco);
+        % odometria
+        odomDistX = normpdf(eval, odomData.x(n), UXOdom);
+        odomDistZ = normpdf(eval, odomData.z(n), UZOdom);
+        if n == 160
+            figure
+            plot(eval, priorDistX, 'c', eval, odomDistX, 'm', eval, arucoDistX, 'g')
+            title("PDFs at step n=160")
+            legend("x prior","odometry","ArUco")
+            grid on
+            figure
+        end
+        likelihoodProdX = priorDistX.*arucoDistX.*odomDistX;
+        likelihoodProdZ = priorDistZ.*arucoDistZ.*odomDistZ;
 
-        fusedPos(n,:) = [arucoData.x(n)*arucoXW + odomData.x(n)*odomXW,...
-            arucoData.z(n)*arucoZW + odomData.z(n)*odomZW,...
-            1/sqrt(UXAruco^(-2)+UXOdom^(-2)),...
-            1/sqrt(UZAruco^(-2)+UZOdom^(-2)),...
-            1];
+        evidenceX = trapz(likelihoodProdX)*delta;
+        evidenceZ = trapz(likelihoodProdZ)*delta;
+
+        posteriorX = likelihoodProdX/evidenceX;
+        posteriorZ = likelihoodProdZ/evidenceZ;
+%         figure
+%         plot(eval, priorDistX, eval, arucoDistX, eval, odomDistX)
+        % expected values (credo corrispondano alla misura fusa... CREDO
+        E_x = trapz(eval.*posteriorX)*delta;
+        E_z = trapz(eval.*posteriorZ)*delta;
+
+        % stdev (incertezza)
+        UfusedX = sqrt(trapz((eval-E_x).^2.*posteriorX)*delta);
+        UfusedZ = sqrt(trapz((eval-E_z).^2.*posteriorZ)*delta);
+
+        fusedPos(n,:) = [E_x, E_z, UfusedX, UfusedZ, 1];
         lastFusedNode = n;
         % plotting connectors between fusion terms
-        % plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'--k',DisplayName='Fusion terms connections', LineWidth=.3)
-        l.AutoUpdate = 'off';
+%         plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'-k',DisplayName='Fusion terms connections')
+%         l.AutoUpdate = 'off';
     else
-        dx = (odomData.x(n)-odomData.x(n-1));%*cos(odomData.yaw(n-1)*pi/180);
-        dz = (odomData.z(n)-odomData.z(n-1));%*sin(odomData.yaw(n-1)*pi/180);
+        %se aruco non viene rilevato mi affido solo a odometria
+        dx = (odomData.x(n)-odomData.x(n-1));
+        dz = (odomData.z(n)-odomData.z(n-1));
         fusedPos(n,:) = [fusedPos(n-1,1:2)+[dx,dz], UXOdom, UZOdom, 0];
     end
 end
-
 %% Visualization
-l.AutoUpdate = 'on';
+%l.AutoUpdate = 'on';
 plot(odomData.x(1:end/2), odomData.z(1:end/2),'.r',DisplayName='Odometry')
 plot(arucoData.x(1:end/2), arucoData.z(1:end/2), '.b',DisplayName='Aruco')
-plot(fusedPos(:,1), fusedPos(:,2),'-g',DisplayName='Clt')
-
-%% Uncertainty
-cltzstd = sqrt(sum((odomData.z(1)-fusedPos(:,2)).^2)/(length(fusedPos(:,2))-1))
-Odomzstd = sqrt(sum((odomData.z(1)-odomData.z(1:end/2)).^2)/(length(odomData.x(1:end/2))-1))
+plot(fusedPos(:,1), fusedPos(:,2),'.-g',DisplayName='Bayes')
 
 %% Uncertainty visualization
 figure
 subplot(2,1,1)
-plot(fusedPos(:,1),fusedPos(:,3), '.-g',DisplayName='Clt', LineWidth=0.8)
+plot(fusedPos(:,1),fusedPos(:,3), '.-g',DisplayName='Clt')
 title("X uncertainty")
 xlabel("x [m]",FontSize=14)
 ylabel("uncertainty [m]",FontSize=14)
@@ -95,42 +123,12 @@ xlabel("z [m]",FontSize=14)
 ylabel("uncertainty [m]",FontSize=14)
 ylim([0,0.15])
 grid on
-%% Cov ellipses
-figure
-hold on
-grid on
-axis equal
-l = legend;
-title('Fused trajectory with covariance ellipses')
-plot(fusedPos(188:349,1), fusedPos(188:349,2),'.-g',DisplayName='Clt')
-plot(arucoData.x(188:349),arucoData.z(188:349),'.b',DisplayName='Aruco')
-plot(odomData.x(188:349),odomData.z(188:349),'.r',DisplayName='Odometry')
-l.AutoUpdate = 'off';
-% for n = 139:10:187
-%     error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','--g')
-% end
-l.AutoUpdate = 'on';
-for n = 188:10:262
-    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','-.m')
-    l.AutoUpdate = 'off';
-end
-l.AutoUpdate = 'on';
-for n = 263:10:289
-    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','-.k')
-    l.AutoUpdate = 'off';
-end
-for n = 290:10:349
-    error_ellipse(diag([fusedPos(n,3) fusedPos(n,4)]),[fusedPos(n,1),fusedPos(n,2)],0.95,'style','-.m')
-end
-
-xlabel("x [m]",FontSize=14)
-ylabel("z [m]",FontSize=14)
 %%
 [~,gof,~] = fit(odomData.frame,odomData.x,"Poly1");
 gof.rmse
 [~,gof,~] = fit(odomData.frame,odomData.z,"Poly1");
 gof.rmse
-[~,gof,~] = fit(odomData.frame(1:height(fusedPos)),fusedPos(:,1),"Poly1");
+[~,gof,~] = fit(odomData.frame(1:651),fusedPos(1:651,1),"Poly1");
 gof.rmse
-[~,gof,~] = fit(odomData.frame(1:height(fusedPos)),fusedPos(:,2),"Poly1");
+[~,gof,~] = fit(odomData.frame(1:651),fusedPos(1:651,2),"Poly1");
 gof.rmse

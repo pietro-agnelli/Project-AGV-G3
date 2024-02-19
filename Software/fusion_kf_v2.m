@@ -38,8 +38,8 @@ F = I;
 u = [odomData.vx';
      odomData.vz'];
 
-G = [dt 0;
-     0  dt];
+G = [0 0;
+     0  0];
 %% Covariance extrapolation
 P = I;
 % process noise
@@ -53,9 +53,10 @@ figure
 l = legend;
 hold on
 grid on
-axis equal
-xlabel("x [m]")
-ylabel("z [m]")
+% axis equal
+xlabel("x [m]",FontSize=14)
+ylabel("z [m]",FontSize=14)
+ylim([-2,2])
 title('XZ trajectory')
 %% Run
 Raruco = diag([Uaruco(1,1)/1000, Uaruco(2,2)/1000]);
@@ -96,6 +97,15 @@ legend
 %% Uncertainty
 kfzstd = sqrt(sum((odomData.z(1)-fusedPos(2,:)).^2)/(length(fusedPos(1,:))-1))
 Odomzstd = sqrt(sum((odomData.z(1)-odomData.z(1:end/2)).^2)/(length(odomData.x(1:end/2))-1))
+%% Rmse
+[~,gof,~] = fit(odomData.frame,odomData.x,"Poly1");
+gof.rmse
+[~,gof,~] = fit(odomData.frame,odomData.z,"Poly1");
+gof.rmse
+[~,gof,~] = fit(odomData.frame(1:length(fusedPos)),fusedPos(1,:)',"Poly1");
+gof.rmse
+[~,gof,~] = fit(odomData.frame(1:length(fusedPos)),fusedPos(2,:)',"Poly1");
+gof.rmse
 %% Functions
 
 function [Xn, P] = prediction(Xn_1, P, Q, F)

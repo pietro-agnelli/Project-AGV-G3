@@ -88,6 +88,9 @@ for n = 2:min(height(odomData),height(arucoData))/2%se aruco viene rilevato facc
             UZ,...
             1];
         lastFusedNode = n;
+        % plotting connectors between fusion terms
+        plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'-k',DisplayName='Fusion terms connections')
+        l.AutoUpdate = 'off';
         
 %         plot(posterior_probabilityX)
 %         pause
@@ -148,10 +151,6 @@ for n = 2:min(height(odomData),height(arucoData))/2%se aruco viene rilevato facc
         %             fusedPos(n,:) = [fusedPos(n-1,1:2)+[dx,dz], UXOdom, UZOdom, 0];
         %         end
     else
-        % plotting connectors between fusion terms
-        %plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'-k',DisplayName='Fusion terms connections')
-        %l.AutoUpdate = 'off';
-
         %se aruco non viene rilevato mi affido solo a odometria
         dx = (odomData.x(n)-odomData.x(n-1));%*cos(odomData.yaw(n-1)*pi/180);
         dz = (odomData.z(n)-odomData.z(n-1));%*sin(odomData.yaw(n-1)*pi/180);
