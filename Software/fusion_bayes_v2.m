@@ -92,7 +92,8 @@ for n = 2:min(height(odomData),height(arucoData))/2%se aruco viene rilevato facc
         lastFusedNode = n;
         % plotting connectors between fusion terms
 %         plot([arucoData.x(n) fusedPos(n,1) odomData.x(n)],[arucoData.z(n) fusedPos(n,2) odomData.z(n)],'-k',DisplayName='Fusion terms connections')
-%         l.AutoUpdate = 'off';
+%         hold on
+         %l.AutoUpdate = 'off';
     else
         %se aruco non viene rilevato mi affido solo a odometria
         dx = (odomData.x(n)-odomData.x(n-1));
@@ -101,10 +102,16 @@ for n = 2:min(height(odomData),height(arucoData))/2%se aruco viene rilevato facc
     end
 end
 %% Visualization
-%l.AutoUpdate = 'on';
+l.AutoUpdate = 'on';    
 plot(odomData.x(1:end/2), odomData.z(1:end/2),'.r',DisplayName='Odometry')
+axis equal
+hold on
 plot(arucoData.x(1:end/2), arucoData.z(1:end/2), '.b',DisplayName='Aruco')
+axis equal
+hold on
 plot(fusedPos(:,1), fusedPos(:,2),'.-g',DisplayName='Bayes')
+axis equal
+legend('odometry data', 'aruco data', 'fused data')
 
 %% Uncertainty visualization
 figure
